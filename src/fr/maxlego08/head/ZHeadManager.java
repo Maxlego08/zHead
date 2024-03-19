@@ -150,4 +150,9 @@ public class ZHeadManager extends ZUtils implements HeadManager {
     public Optional<Head> getHead(String id) {
         return this.heads.values().stream().flatMap(List::stream).filter(e -> e.getId().equalsIgnoreCase(id)).findFirst();
     }
+
+    @Override
+    public ItemStack createItemStack(String id) {
+        return getHead(id).map(head -> createSkull(head.getValue())).orElse(null);
+    }
 }
