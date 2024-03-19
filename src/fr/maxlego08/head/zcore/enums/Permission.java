@@ -6,7 +6,7 @@ public enum Permission {
     ZHEAD_RELOAD,
     ZHEAD_HELP,
 
-	ZHEAD_UPDATE;
+	ZHEAD_UPDATE, ZHEAD_GIVE;
 
 	private String permission;
 

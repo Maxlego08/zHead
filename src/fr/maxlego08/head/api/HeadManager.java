@@ -1,9 +1,11 @@
 package fr.maxlego08.head.api;
 
 import fr.maxlego08.head.api.enums.HeadCategory;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HeadManager {
 
@@ -18,4 +20,10 @@ public interface HeadManager {
     long count(HeadCategory headCategory);
 
     List<Head> getHeads(HeadCategory headCategory);
+
+    void give(CommandSender sender, Player player, Head head, int amount);
+
+    void give(CommandSender sender, Player player, String headId, int amount);
+
+    Optional<Head> getHead(String id);
 }

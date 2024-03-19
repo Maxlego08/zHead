@@ -27,7 +27,7 @@ public class HeadAdapter extends TypeAdapter<Head> {
     public Head read(JsonReader in) throws IOException {
         String name = "";
         String id = "";
-        HeadCategory headCategory = HeadCategory.ALPHABET;
+        HeadCategory headCategory = HeadCategory.MISCELLANEOUS;
         String value = "";
         String tags = "";
 
@@ -45,7 +45,7 @@ public class HeadAdapter extends TypeAdapter<Head> {
                     headCategory = HeadCategory.fromString(categoryName);
                     if (headCategory == null) {
                         Logger.info("The category '" + categoryName + "' cannot be found", Logger.LogType.ERROR);
-                        headCategory = HeadCategory.ALPHABET;
+                        headCategory = HeadCategory.MISCELLANEOUS;
                     }
                     break;
                 case "value":

@@ -6,18 +6,20 @@ import fr.maxlego08.head.api.enums.HeadCategory;
 import fr.maxlego08.head.exceptions.InventoryOpenException;
 import fr.maxlego08.head.inventory.VInventory;
 import fr.maxlego08.head.save.Config;
+import fr.maxlego08.head.zcore.enums.Message;
 import fr.maxlego08.head.zcore.utils.inventory.InventoryResult;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InventoryHeads extends VInventory {
 
-    private final List<Integer> decorationSlot = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53);
+    private final List<Integer> decorationSlot = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 50, 51, 52, 53);
 
     @Override
     public InventoryResult openInventory(HeadPlugin plugin, Player player, int page, Object... args) throws InventoryOpenException {
@@ -27,6 +29,7 @@ public class InventoryHeads extends VInventory {
 
         createInventory(color(getMessage(Config.headInventoryName, "%count%", simplifyNumber(counts))), 54);
 
+        displayRefresh();
         displayDecoration();
         displayHeads(headManager);
 
@@ -46,15 +49,23 @@ public class InventoryHeads extends VInventory {
     private void displayHeads(HeadManager headManager) {
         int slot = 10;
         for (HeadCategory headCategory : HeadCategory.values()) {
+
             ItemStack itemStack = createSkull(headCategory.getUrl());
-            ItemMeta itemMeta = itemStack.getItemMeta();
+            Config.headItem.apply(itemStack, "%category%", Config.categoryNames.get(headCategory), "%count%", format(headManager.count(headCategory)));
 
-            itemMeta.setDisplayName(color(getMessage(Config.headItemName, "%category%", Config.categoryNames.get(headCategory))));
-            itemMeta.setLore(color(Config.headItemLore).stream().map(e -> getMessage(e, "%count%", format(headManager.count(headCategory)))).collect(Collectors.toList()));
-
-            itemStack.setItemMeta(itemMeta);
             addItem(slot++, itemStack).setClick(event -> headManager.openCategory(player, headCategory, 1));
             if (slot == 17) slot = 19;
         }
+    }
+
+    private void displayRefresh() {
+        ItemStack itemStack = new ItemStack(Material.NETHER_STAR);
+        Config.refreshItem.apply(itemStack);
+
+        addItem(49, itemStack).setClick(event -> {
+            player.closeInventory();
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> this.plugin.getHeadManager().downloadHead(true));
+            message(player, Message.REFRESH);
+        });
     }
 }

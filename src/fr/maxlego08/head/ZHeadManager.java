@@ -4,9 +4,13 @@ import com.google.gson.reflect.TypeToken;
 import fr.maxlego08.head.api.Head;
 import fr.maxlego08.head.api.HeadManager;
 import fr.maxlego08.head.api.enums.HeadCategory;
+import fr.maxlego08.head.save.Config;
 import fr.maxlego08.head.zcore.enums.EnumInventory;
+import fr.maxlego08.head.zcore.enums.Message;
 import fr.maxlego08.head.zcore.utils.ZUtils;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
@@ -21,10 +25,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ZHeadManager extends ZUtils implements HeadManager {
 
-    private final String API_URL = "http://mib.test/api/v1/heads";
     private final HeadPlugin plugin;
     private final Map<HeadCategory, List<Head>> heads = new HashMap<>();
 
@@ -37,14 +41,17 @@ public class ZHeadManager extends ZUtils implements HeadManager {
     public void downloadHead(boolean force) {
 
         File file = new File(plugin.getDataFolder(), "heads.json");
-        if (file.exists()) {
+        if (file.exists() && !force) {
             this.loadHeads();
             return;
         }
 
         long ms = System.currentTimeMillis();
 
+        this.plugin.getLogger().info("Download starts");
+
         try {
+            String API_URL = "https://minecraft-inventory-builder.com/api/v1/heads";
             URL url = new URL(API_URL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -60,6 +67,11 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
             JSONParser parser = new JSONParser();
             JSONArray json = (JSONArray) parser.parse(content.toString());
+
+            if (file.exists()) {
+                this.plugin.getLogger().info("Delete old json file");
+                file.delete();
+            }
 
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(json.toJSONString());
@@ -111,5 +123,31 @@ public class ZHeadManager extends ZUtils implements HeadManager {
     @Override
     public List<Head> getHeads(HeadCategory headCategory) {
         return this.heads.get(headCategory);
+    }
+
+    @Override
+    public void give(CommandSender sender, Player player, Head head, int amount) {
+        ItemStack itemStack = createSkull(head.getValue());
+        itemStack.setAmount(amount);
+        Config.headItem.applyName(itemStack, "%name%", head.getName());
+        give(player, itemStack);
+
+        message(sender, Message.GIVE, "%name%", head.getName(), "%id%", head.getId());
+    }
+
+    @Override
+    public void give(CommandSender sender, Player player, String headId, int amount) {
+        Optional<Head> optional = getHead(headId);
+        if (!optional.isPresent()) {
+            message(sender, Message.NOT_FOUND, "%id%", headId);
+            return;
+        }
+
+        give(sender, player, optional.get(), amount);
+    }
+
+    @Override
+    public Optional<Head> getHead(String id) {
+        return this.heads.values().stream().flatMap(List::stream).filter(e -> e.getId().equalsIgnoreCase(id)).findFirst();
     }
 }

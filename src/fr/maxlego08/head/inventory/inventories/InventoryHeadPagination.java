@@ -7,14 +7,15 @@ import fr.maxlego08.head.api.enums.HeadCategory;
 import fr.maxlego08.head.exceptions.InventoryOpenException;
 import fr.maxlego08.head.inventory.VInventory;
 import fr.maxlego08.head.save.Config;
+import fr.maxlego08.head.zcore.enums.EnumInventory;
+import fr.maxlego08.head.zcore.utils.builder.ItemBuilder;
 import fr.maxlego08.head.zcore.utils.inventory.InventoryResult;
 import fr.maxlego08.head.zcore.utils.inventory.Pagination;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InventoryHeadPagination extends VInventory {
 
@@ -30,9 +31,40 @@ public class InventoryHeadPagination extends VInventory {
 
         createInventory(color(getMessage(Config.headInventoryName, "%count%", format(heads.size()), "%category%", categoryName)), 54);
 
+        backButton();
         displayHeads(headManager, page, heads, categoryName);
+        displayPagination(heads, headCategory, page, headManager);
+
 
         return InventoryResult.SUCCESS;
+    }
+
+    private void displayPagination(List<Head> heads, HeadCategory headCategory, int page, HeadManager manager) {
+
+        int maxPage = getMaxPage(heads, PAGINATION_SIZE);
+        int size = 7;
+        int slot = 46;
+        page -= 3;
+
+        for (int i = 0; i != size; i++) {
+
+            int index = page + i;
+            if (index > maxPage || index < 1) {
+                slot++;
+                continue;
+            }
+
+            ItemBuilder itemBuilder = new ItemBuilder(Material.PAPER, color(getMessage(Config.pageItemName, "%page%", index)));
+            itemBuilder.setAmount(index > 64 ? 1 : index);
+            if (index == this.page) itemBuilder.glow();
+            addItem(slot++, itemBuilder).setClick(event -> manager.openCategory(player, headCategory, index));
+        }
+    }
+
+    private void backButton() {
+
+        ItemBuilder itemBuilder = new ItemBuilder(Material.BARRIER, color(Config.backItemName));
+        addItem(45, itemBuilder).setClick(event -> createInventory(this.plugin, this.player, EnumInventory.HEADS));
     }
 
     private void displayHeads(HeadManager headManager, int page, List<Head> heads, String categoryName) {
@@ -45,19 +77,8 @@ public class InventoryHeadPagination extends VInventory {
             Head head = heads.get(slot);
 
             ItemStack itemStack = createSkull(head.getValue());
-            ItemMeta itemMeta = itemStack.getItemMeta();
-
-            itemMeta.setDisplayName(color(getMessage(Config.paginateItemName, "%name%", head.getName())));
-            itemMeta.setLore(color(Config.paginateItemLore).stream().map(e -> getMessage(e,
-                    "%category%", categoryName,
-                    "%tags%", head.getTags(),
-                    "%id%", "todo"
-            )).collect(Collectors.toList()));
-
-            itemStack.setItemMeta(itemMeta);
-            addItem(slot, itemStack).setClick(event -> {
-
-            });
+            Config.paginateItem.apply(itemStack, "%name%", head.getName(), "%category%", categoryName, "%tags%", head.getTags(), "%id%", head.getId());
+            addItem(slot, itemStack).setClick(event -> headManager.give(this.player, this.player, head, 1));
         }
     }
 }

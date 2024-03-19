@@ -5,7 +5,6 @@ import fr.maxlego08.head.api.enums.HeadCategory;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Config {
@@ -17,10 +16,11 @@ public class Config {
 
     public static String headInventoryName;
     public static String paginationInventoryName;
-    public static String headItemName;
-    public static List<String> headItemLore;
-    public static String paginateItemName;
-    public static List<String> paginateItemLore;
+    public static ItemConfiguration headItem;
+    public static ItemConfiguration paginateItem;
+    public static ItemConfiguration refreshItem;
+    public static String backItemName;
+    public static String pageItemName;
 
     /**
      * static Singleton instance.
@@ -56,12 +56,13 @@ public class Config {
         }
 
         headInventoryName = configuration.getString("inventory.heads.name");
-        headItemName = configuration.getString("inventory.heads.item.name");
-        headItemLore = configuration.getStringList("inventory.heads.item.lore");
+        headItem = new ItemConfiguration(configuration.getString("inventory.heads.item.name"), configuration.getStringList("inventory.heads.item.lore"));
+        refreshItem = new ItemConfiguration(configuration.getString("inventory.heads.refresh.name"), configuration.getStringList("inventory.heads.refresh.lore"));
 
         paginationInventoryName = configuration.getString("inventory.pagination.name");
-        paginateItemName = configuration.getString("inventory.pagination.item.name");
-        paginateItemLore = configuration.getStringList("inventory.pagination.item.lore");
-    }
+        paginateItem = new ItemConfiguration(configuration.getString("inventory.pagination.item.name"), configuration.getStringList("inventory.pagination.item.lore"));
 
+        backItemName = configuration.getString("inventory.back");
+        pageItemName = configuration.getString("inventory.page");
+    }
 }

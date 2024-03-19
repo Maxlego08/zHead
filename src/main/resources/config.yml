@@ -27,12 +27,18 @@ category:
   plants: Plants
 
 inventory:
+  back: "&cBack to main menu"
+  page: "&cPage %page%"
   heads:
     name: '&czHead &8%count% heads'
     item:
       name: "&c&l%category%"
       lore:
         - "&f%count% &7heads"
+    refresh:
+      name: "&c&lRefresh"
+      lore:
+        - "&8Click to refresh the heads database"
   pagination:
     name: "&c%category% &8%count% heads"
     item:

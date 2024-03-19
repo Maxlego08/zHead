@@ -45,7 +45,12 @@ public enum Message {
 
     DESCRIPTION_RELOAD("Reload configuration files"),
     DESCRIPTION_UPDATE("Force the download of heads"),
+    DESCRIPTION_GIVE("Give a head"),
     DESCRIPTION_HELP("Show commands"),
+    REFRESH("§aThe data is being updated, please wait."),
+
+    GIVE("§aYou just got the head §f%name% §8(§7%id%§8)"),
+    NOT_FOUND("§cCannot find head with id§8: §f%id%"),
     ;
 
     private List<String> messages;

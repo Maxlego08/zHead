@@ -14,6 +14,7 @@ public class CommandHead extends VCommand {
         this.addSubCommand(new CommandHeadReload(plugin));
         this.addSubCommand(new CommandHeadUpdate(plugin));
         this.addSubCommand(new CommandHeadHelp(plugin));
+        this.addSubCommand(new CommandHeadGive(plugin));
         this.onlyPlayers();
     }
 
