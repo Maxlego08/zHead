@@ -987,34 +987,6 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     /**
-     * Allows you to create a head from a URL
-     *
-     * @param url
-     * @return itemstack
-     */
-    public ItemStack createSkull(String url) {
-
-        ItemStack head = playerHead();
-        if (url.isEmpty()) return head;
-
-        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "random_name");
-
-        profile.getProperties().put("textures", new Property("textures", url));
-
-        try {
-            Field profileField = headMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(headMeta, profile);
-
-        } catch (IllegalArgumentException | NoSuchFieldException | SecurityException | IllegalAccessException error) {
-            error.printStackTrace();
-        }
-        head.setItemMeta(headMeta);
-        return head;
-    }
-
-    /**
      * Allows to check if an itemstack and a head
      *
      * @param itemStack
@@ -1210,5 +1182,28 @@ public abstract class ZUtils extends MessageUtils {
         itemStack.setItemMeta(headMeta);
     }
 
+    private void applyTextureUrl(ItemStack itemStack, String url) {
+        SkullMeta headMeta = (SkullMeta) itemStack.getItemMeta();
+        if (headMeta != null) {
+            headMeta.setOwnerProfile((PlayerProfile) cache.get(url, () -> getProfile(url)));
+        }
+        itemStack.setItemMeta(headMeta);
+    }
+
+    public ItemStack createSkull(String url) {
+
+        ItemStack head = playerHead();
+        if (url.isEmpty()) {
+            return head;
+        }
+
+        if (NMSUtils.isNewHeadApi()) {
+            this.applyTextureUrl(head, url);
+        } else {
+            this.applyTexture(head, url);
+        }
+
+        return head;
+    }
 
 }
