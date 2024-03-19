@@ -10,6 +10,8 @@ import fr.maxlego08.head.save.Config;
 import fr.maxlego08.head.save.MessageLoader;
 import fr.maxlego08.head.zcore.ZPlugin;
 import fr.maxlego08.head.zcore.enums.EnumInventory;
+import fr.maxlego08.head.zcore.utils.plugins.Metrics;
+import fr.maxlego08.head.zcore.utils.plugins.VersionChecker;
 
 /**
  * System to create your plugins very simply Projet:
@@ -45,6 +47,10 @@ public class HeadPlugin extends ZPlugin {
         this.loadFiles();
 
         this.headManager.registerPlaceholders();
+
+        new Metrics(this, 21364);
+        VersionChecker versionChecker = new VersionChecker(this, 317);
+        versionChecker.useLastVersion();
 
         this.postEnable();
     }
