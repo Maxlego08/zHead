@@ -1,12 +1,16 @@
 package fr.maxlego08.head.api;
 
+import fr.maxlego08.head.api.enums.HeadCategory;
+
 import java.util.UUID;
 
 public interface Head {
 
     String getName();
 
-    UUID getUniqueId();
+    HeadCategory getHeadCategory();
+
+    String getId();
 
     String getValue();
 

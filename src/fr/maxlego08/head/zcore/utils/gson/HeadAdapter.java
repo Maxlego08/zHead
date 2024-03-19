@@ -6,12 +6,12 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import fr.maxlego08.head.ZHead;
 import fr.maxlego08.head.api.Head;
-import fr.maxlego08.head.zcore.ZPlugin;
+import fr.maxlego08.head.api.enums.HeadCategory;
+import fr.maxlego08.head.zcore.logger.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.UUID;
 
 public class HeadAdapter extends TypeAdapter<Head> {
 
@@ -26,7 +26,8 @@ public class HeadAdapter extends TypeAdapter<Head> {
     @Override
     public Head read(JsonReader in) throws IOException {
         String name = "";
-        String uuid = "";
+        String id = "";
+        HeadCategory headCategory = HeadCategory.ALPHABET;
         String value = "";
         String tags = "";
 
@@ -36,8 +37,16 @@ public class HeadAdapter extends TypeAdapter<Head> {
                 case "name":
                     name = in.nextString();
                     break;
-                case "uuid":
-                    uuid = in.nextString();
+                case "id":
+                    id = in.nextString();
+                    break;
+                case "category":
+                    String categoryName = in.nextString();
+                    headCategory = HeadCategory.fromString(categoryName);
+                    if (headCategory == null) {
+                        Logger.info("The category '" + categoryName + "' cannot be found", Logger.LogType.ERROR);
+                        headCategory = HeadCategory.ALPHABET;
+                    }
                     break;
                 case "value":
                     value = in.nextString();
@@ -50,6 +59,6 @@ public class HeadAdapter extends TypeAdapter<Head> {
             }
         }
         in.endObject();
-        return new ZHead(name, UUID.fromString(uuid), value, tags);
+        return new ZHead(id, name, value, tags, headCategory);
     }
 }

@@ -9,9 +9,7 @@ public interface HeadManager {
 
     void downloadHead(boolean force);
 
-    void downloadHead(HeadCategory headCategory);
-
-    void loadHead(HeadCategory headCategory);
+    void loadHeads();
 
     long count();
 

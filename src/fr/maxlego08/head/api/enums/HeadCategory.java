@@ -1,11 +1,5 @@
 package fr.maxlego08.head.api.enums;
 
-import fr.maxlego08.head.api.Head;
-import org.bukkit.plugin.Plugin;
-
-import java.io.File;
-import java.util.List;
-
 public enum HeadCategory {
 
     ALPHABET("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzZkZTMzMTQzODJiMjEwYjM0ZThjMWI1ZDI1YWU0Yjc1Yjg0OTA0NmU4ZWEwZWYwZTgwMGEzMjhiYWFiNWY3ZSJ9fX0="),
@@ -25,14 +19,17 @@ public enum HeadCategory {
         this.url = url;
     }
 
-    public String getName() {
-        return name().toLowerCase().replace("_", "-");
+    public static HeadCategory fromString(String string) {
+        for (HeadCategory category : values()) {
+            if (category.getName().equalsIgnoreCase(string)) {
+                return category;
+            }
+        }
+        return null;
     }
 
-    public File getFile(Plugin plugin) {
-        File folder = new File(plugin.getDataFolder(), "heads");
-        if (!folder.exists()) folder.mkdirs();
-        return new File(folder, getName() + ".json");
+    public String getName() {
+        return name().toLowerCase().replace("_", "-");
     }
 
     public String getUrl() {

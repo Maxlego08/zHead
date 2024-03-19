@@ -17,37 +17,35 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ZHeadManager extends ZUtils implements HeadManager {
 
-    private final String API_URL = "https://minecraft-heads.com/scripts/api.php?cat=%s&tags=true";
+    private final String API_URL = "http://mib.test/api/v1/heads";
     private final HeadPlugin plugin;
     private final Map<HeadCategory, List<Head>> heads = new HashMap<>();
 
     public ZHeadManager(HeadPlugin plugin) {
         this.plugin = plugin;
+        for (HeadCategory headCategory : HeadCategory.values()) heads.put(headCategory, new ArrayList<>());
     }
 
     @Override
     public void downloadHead(boolean force) {
-        for (HeadCategory headCategory : HeadCategory.values()) {
-            File file = headCategory.getFile(this.plugin);
-            if (file.exists() && !force) this.loadHead(headCategory);
-            else this.downloadHead(headCategory);
-        }
-    }
 
-    @Override
-    public void downloadHead(HeadCategory headCategory) {
+        File file = new File(plugin.getDataFolder(), "heads.json");
+        if (file.exists()) {
+            this.loadHeads();
+            return;
+        }
+
         long ms = System.currentTimeMillis();
 
-        String name = headCategory.getName();
-        String urlString = String.format(API_URL, name);
         try {
-            URL url = new URL(urlString);
+            URL url = new URL(API_URL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
@@ -63,28 +61,33 @@ public class ZHeadManager extends ZUtils implements HeadManager {
             JSONParser parser = new JSONParser();
             JSONArray json = (JSONArray) parser.parse(content.toString());
 
-            FileWriter file = new FileWriter(headCategory.getFile(this.plugin));
-            file.write(json.toJSONString());
-            file.close();
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(json.toJSONString());
+            fileWriter.close();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
 
         long duration = System.currentTimeMillis() - ms;
-        this.plugin.getLogger().info("Download done in " + duration + "ms (" + name + ")");
+        this.plugin.getLogger().info("Download done in " + duration + "ms");
 
-        this.loadHead(headCategory);
+        this.loadHeads();
     }
 
-    @Override
-    public void loadHead(HeadCategory headCategory) {
+    public void loadHeads() {
+
+        File file = new File(plugin.getDataFolder(), "heads.json");
+        if (!file.exists()) {
+            downloadHead(true);
+            return;
+        }
 
         try {
-            FileReader fileReader = new FileReader(headCategory.getFile(plugin));
+            FileReader fileReader = new FileReader(file);
             List<Head> headList = plugin.getGson().fromJson(fileReader, new TypeToken<List<Head>>() {
             }.getType());
 
-            this.heads.put(headCategory, headList);
+            headList.forEach(head -> this.heads.computeIfAbsent(head.getHeadCategory(), k -> new ArrayList<>()).add(head));
         } catch (Exception exception) {
             exception.printStackTrace();
         }
