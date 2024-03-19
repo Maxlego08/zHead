@@ -3,7 +3,7 @@ package fr.maxlego08.head.zcore.enums;
 public enum EnumInventory {
 
     HEADS(1),
-    HEADS_PAGINATION(2);
+    HEADS_PAGINATION(2), SEARCH(3);
 
     private final int id;
 

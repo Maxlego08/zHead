@@ -19,7 +19,35 @@ import java.util.List;
 
 public class InventoryHeadPagination extends VInventory {
 
-    private final int PAGINATION_SIZE = 45;
+    public static final int PAGINATION_SIZE = 45;
+
+    public static void backButton(VInventory inventory, HeadPlugin plugin) {
+
+        ItemBuilder itemBuilder = new ItemBuilder(Material.BARRIER, inventory.color(Config.backItemName));
+        inventory.addItem(45, itemBuilder).setClick(event -> inventory.createInventory(plugin, inventory.getPlayer(), EnumInventory.HEADS));
+    }
+
+    public static void searchButton(VInventory inventory) {
+
+        ItemStack itemStack = new ItemStack(Material.COMPASS);
+        Config.searchItem.apply(itemStack);
+        inventory.addItem(53, itemStack);
+    }
+
+    public static void displayHeads(VInventory inventory, HeadManager headManager, int page, List<Head> heads) {
+
+        Pagination<Head> pagination = new Pagination<>();
+        heads = pagination.paginate(heads, PAGINATION_SIZE, page);
+
+        for (int slot = 0; slot != heads.size(); slot++) {
+
+            Head head = heads.get(slot);
+
+            ItemStack itemStack = inventory.createSkull(head.getValue());
+            Config.paginateItem.apply(itemStack, "%name%", head.getName(), "%category%", Config.categoryNames.get(head.getHeadCategory()), "%tags%", head.getTags(), "%id%", head.getId());
+            inventory.addItem(slot, itemStack).setClick(event -> headManager.give(inventory.getPlayer(), inventory.getPlayer(), head, 1));
+        }
+    }
 
     @Override
     public InventoryResult openInventory(HeadPlugin plugin, Player player, int page, Object... args) throws InventoryOpenException {
@@ -29,10 +57,11 @@ public class InventoryHeadPagination extends VInventory {
         List<Head> heads = headManager.getHeads(headCategory);
         String categoryName = Config.categoryNames.get(headCategory);
 
-        createInventory(color(getMessage(Config.headInventoryName, "%count%", format(heads.size()), "%category%", categoryName)), 54);
+        createInventory(color(getMessage(Config.paginationInventoryName, "%count%", format(heads.size()), "%category%", categoryName)), 54);
 
-        backButton();
-        displayHeads(headManager, page, heads, categoryName);
+        searchButton(this);
+        backButton(this, plugin);
+        displayHeads(this, headManager, page, heads);
         displayPagination(heads, headCategory, page, headManager);
 
 
@@ -58,27 +87,6 @@ public class InventoryHeadPagination extends VInventory {
             itemBuilder.setAmount(index > 64 ? 1 : index);
             if (index == this.page) itemBuilder.glow();
             addItem(slot++, itemBuilder).setClick(event -> manager.openCategory(player, headCategory, index));
-        }
-    }
-
-    private void backButton() {
-
-        ItemBuilder itemBuilder = new ItemBuilder(Material.BARRIER, color(Config.backItemName));
-        addItem(45, itemBuilder).setClick(event -> createInventory(this.plugin, this.player, EnumInventory.HEADS));
-    }
-
-    private void displayHeads(HeadManager headManager, int page, List<Head> heads, String categoryName) {
-
-        Pagination<Head> pagination = new Pagination<>();
-        heads = pagination.paginate(heads, PAGINATION_SIZE, page);
-
-        for (int slot = 0; slot != heads.size(); slot++) {
-
-            Head head = heads.get(slot);
-
-            ItemStack itemStack = createSkull(head.getValue());
-            Config.paginateItem.apply(itemStack, "%name%", head.getName(), "%category%", categoryName, "%tags%", head.getTags(), "%id%", head.getId());
-            addItem(slot, itemStack).setClick(event -> headManager.give(this.player, this.player, head, 1));
         }
     }
 }

@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ZHeadManager extends ZUtils implements HeadManager {
 
@@ -200,5 +201,16 @@ public class ZHeadManager extends ZUtils implements HeadManager {
     @Override
     public Date getUpdatedAt() {
         return this.updatedAt;
+    }
+
+    @Override
+    public void search(Player player, String value) {
+        List<Head> lists = search(value);
+        createInventory(this.plugin, player, EnumInventory.SEARCH, 1, lists);
+    }
+
+    @Override
+    public List<Head> search(String value) {
+        return this.heads.values().stream().flatMap(List::stream).filter(e -> e.getId().toLowerCase().contains(value.toLowerCase()) || e.getName().toLowerCase().contains(value.toLowerCase()) || e.getTags().toLowerCase().contains(value.toLowerCase())).collect(Collectors.toList());
     }
 }

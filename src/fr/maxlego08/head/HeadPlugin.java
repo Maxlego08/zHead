@@ -3,6 +3,7 @@ package fr.maxlego08.head;
 import fr.maxlego08.head.api.HeadManager;
 import fr.maxlego08.head.command.commands.CommandHead;
 import fr.maxlego08.head.inventory.inventories.InventoryHeadPagination;
+import fr.maxlego08.head.inventory.inventories.InventoryHeadSearch;
 import fr.maxlego08.head.inventory.inventories.InventoryHeads;
 import fr.maxlego08.head.placeholder.LocalPlaceholder;
 import fr.maxlego08.head.save.Config;
@@ -34,6 +35,7 @@ public class HeadPlugin extends ZPlugin {
         this.registerCommand("zhead", new CommandHead(this), "head", "zhd");
         this.registerInventory(EnumInventory.HEADS, new InventoryHeads());
         this.registerInventory(EnumInventory.HEADS_PAGINATION, new InventoryHeadPagination());
+        this.registerInventory(EnumInventory.SEARCH, new InventoryHeadSearch());
 
         this.addSave(new MessageLoader(this));
 

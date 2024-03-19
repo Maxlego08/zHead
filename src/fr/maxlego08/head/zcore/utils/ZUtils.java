@@ -441,7 +441,7 @@ public abstract class ZUtils extends MessageUtils {
      * @param player
      * @param inventoryId
      */
-    protected void createInventory(HeadPlugin plugin, Player player, EnumInventory inventory) {
+    public void createInventory(HeadPlugin plugin, Player player, EnumInventory inventory) {
         createInventory(plugin, player, inventory, 1);
     }
 
@@ -544,7 +544,7 @@ public abstract class ZUtils extends MessageUtils {
      * @param message
      * @return
      */
-    protected String color(String message) {
+    public String color(String message) {
         if (message == null) return null;
         if (NMSUtils.isHexColor()) {
             Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
@@ -992,7 +992,7 @@ public abstract class ZUtils extends MessageUtils {
      * @param url
      * @return itemstack
      */
-    protected ItemStack createSkull(String url) {
+    public ItemStack createSkull(String url) {
 
         ItemStack head = playerHead();
         if (url.isEmpty()) return head;

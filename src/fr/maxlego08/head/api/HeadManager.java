@@ -32,4 +32,8 @@ public interface HeadManager {
     ItemStack createItemStack(String id);
 
     Date getUpdatedAt();
+
+    void search(Player player, String value);
+
+    List<Head> search(String value);
 }

@@ -76,7 +76,7 @@ public class InventoryHeads extends VInventory {
         ItemStack itemStack = new ItemStack(Material.BOOK);
         Date date = this.plugin.getHeadManager().getUpdatedAt();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        Config.informationHead.apply(itemStack, "%amount%", this.plugin.getHeadManager().count(), "%updated%", dateFormat.format(date));
+        Config.informationItem.apply(itemStack, "%amount%", this.plugin.getHeadManager().count(), "%updated%", dateFormat.format(date));
 
         addItem(43, itemStack);
     }
