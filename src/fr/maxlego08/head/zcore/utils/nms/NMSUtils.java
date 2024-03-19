@@ -122,4 +122,11 @@ public class NMSUtils {
 				|| version == 1.12 || version == 1.13 || version == 1.14 || version == 1.15);
 	}
 
+	public static boolean isNewHeadApi() {
+		final double version = getNMSVersion();
+		return !(version == 1.7 || version == 1.8 || version == 1.9 || version == 1.10 || version == 1.11
+				|| version == 1.12 || version == 1.13 || version == 1.14 || version == 1.15 || version == 1.16
+				|| version == 1.17 || version == 1.18 || version == 1.19);
+	}
+
 }

@@ -1,0 +1,43 @@
+########################################################################################################################
+#
+# ███████╗██╗░░██╗███████╗░█████╗░██████╗░
+# ╚════██║██║░░██║██╔════╝██╔══██╗██╔══██╗
+# ░░███╔═╝███████║█████╗░░███████║██║░░██║
+# ██╔══╝░░██╔══██║██╔══╝░░██╔══██║██║░░██║
+# ███████╗██║░░██║███████╗██║░░██║██████╔╝
+# ╚══════╝╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝╚═════╝░
+#
+# Commands:
+# /zhead - zhead.use - Display commands
+# /zhead reload - zhead.reload - Reload configurations files
+# /zhead update - zhead.update - Force the download of heads
+#
+########################################################################################################################
+
+category:
+  alphabet: Alphabet
+  animals: Animals
+  blocks: Blocks
+  decoration: Decoration
+  food_drinks: Food and Drinks
+  humans: Humans
+  humanoid: Humanoid
+  miscellaneous: Miscellaneous
+  monsters: Monsters
+  plants: Plants
+
+inventory:
+  heads:
+    name: '&czHead &8%count% heads'
+    item:
+      name: "&c&l%category%"
+      lore:
+        - "&f%count% &7heads"
+  pagination:
+    name: "&c%category% &8%count% heads"
+    item:
+      name: "&f%name%"
+      lore:
+        - "&8%category%"
+        - "&8%tags%"
+        - "&fID&8: &7%id%"
