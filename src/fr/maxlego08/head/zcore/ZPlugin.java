@@ -2,11 +2,13 @@ package fr.maxlego08.head.zcore;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.maxlego08.head.api.Head;
 import fr.maxlego08.head.command.VCommand;
 import fr.maxlego08.head.exceptions.ListenerNullException;
 import fr.maxlego08.head.placeholder.LocalPlaceholder;
 import fr.maxlego08.head.placeholder.Placeholder;
 import fr.maxlego08.head.zcore.enums.EnumInventory;
+import fr.maxlego08.head.zcore.utils.gson.HeadAdapter;
 import fr.maxlego08.head.zcore.utils.storage.Persist;
 import fr.maxlego08.head.zcore.utils.storage.Savable;
 import fr.maxlego08.head.HeadPlugin;
@@ -108,6 +110,7 @@ public abstract class ZPlugin extends JavaPlugin {
         return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().serializeNulls()
                 .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.VOLATILE)
                 .registerTypeAdapter(PotionEffect.class, new PotionEffectAdapter(this))
+                .registerTypeAdapter(Head.class, new HeadAdapter())
                 .registerTypeAdapter(Location.class, new LocationAdapter(this));
     }
 

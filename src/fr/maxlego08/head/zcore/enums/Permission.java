@@ -1,11 +1,11 @@
 package fr.maxlego08.head.zcore.enums;
 
 public enum Permission {
-	
-	EXAMPLE_PERMISSION,
-	EXAMPLE_PERMISSION_RELOAD,
 
-	;
+	ZHEAD_USE,
+    ZHEAD_RELOAD,
+    ZHEAD_HELP,
+	ZHEAD_GIVE, ZHEAD_SEARCH;
 
 	private String permission;
 

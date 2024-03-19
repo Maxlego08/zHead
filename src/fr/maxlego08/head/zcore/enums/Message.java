@@ -10,7 +10,7 @@ import java.util.Map;
 
 public enum Message {
 
-    PREFIX("§8(§6Template§8) "),
+    PREFIX("§8(§6zHead§8) "),
 
     TELEPORT_MOVE("§cYou must not move!"),
     TELEPORT_MESSAGE("§7Teleportation in §3%second% §7seconds!"),
@@ -44,7 +44,14 @@ public enum Message {
     RELOAD("§aYou have just reloaded the configuration files."),
 
     DESCRIPTION_RELOAD("Reload configuration files"),
+    DESCRIPTION_VERSION("Show plugin version"),
+    DESCRIPTION_GIVE("Give a head"),
+    DESCRIPTION_SEARCH("Search heads"),
+    DESCRIPTION_HELP("Show commands"),
+    REFRESH("§aThe data is being updated, please wait."),
 
+    GIVE("§aYou just got the head §f%name% §8(§7%id%§8)"),
+    NOT_FOUND("§cCannot find head with id§8: §f%id%"),
     ;
 
     private List<String> messages;
