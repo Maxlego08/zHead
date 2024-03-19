@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.maxlego08.head.api.Head;
 import fr.maxlego08.head.api.HeadManager;
 import fr.maxlego08.head.api.enums.HeadCategory;
+import fr.maxlego08.head.placeholder.LocalPlaceholder;
 import fr.maxlego08.head.save.Config;
 import fr.maxlego08.head.zcore.enums.EnumInventory;
 import fr.maxlego08.head.zcore.enums.Message;
@@ -40,6 +41,28 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
     public ZHeadManager(HeadPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    public void registerPlaceholders() {
+
+        LocalPlaceholder placeholder = LocalPlaceholder.getInstance();
+        placeholder.register("count", (player) -> String.valueOf(count()));
+        placeholder.register("count_format", (player) -> simplifyNumber(count()));
+
+        placeholder.register("category_count_format_", (player, args) -> {
+            try {
+                return simplifyNumber(count(HeadCategory.valueOf(args.toUpperCase())));
+            } catch (Exception exception) {
+                return args + " category was not found";
+            }
+        });
+        placeholder.register("category_count_", (player, args) -> {
+            try {
+                return String.valueOf(count(HeadCategory.valueOf(args.toUpperCase())));
+            } catch (Exception exception) {
+                return args + " category was not found";
+            }
+        });
     }
 
     @Override
@@ -171,7 +194,7 @@ public class ZHeadManager extends ZUtils implements HeadManager {
     public void give(CommandSender sender, Player player, Head head, int amount) {
         ItemStack itemStack = createSkull(head.getValue());
         itemStack.setAmount(amount);
-        Config.headItem.applyName(itemStack, "%name%", head.getName());
+        Config.paginateItem.applyName(itemStack, "%name%", head.getName());
         give(player, itemStack);
 
         message(sender, Message.GIVE, "%name%", head.getName(), "%id%", head.getId());

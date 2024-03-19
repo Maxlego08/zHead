@@ -10,8 +10,15 @@
 # Commands:
 # /zhead - zhead.use - Display commands
 # /zhead reload - zhead.reload - Reload configurations files
-# /zhead version - - Display plugin version
+# /zhead update - zhead.update - Force the download of heads
 # /zhead give <id> [<amount>] [<player>] - zhead.give - Give a head
+# /zhead search <value> - zhead.search - Search heads
+#
+# Placeholders:
+# %zhead_count% - Displays the total of heads
+# %zhead_count_format% - Displays the total of heads with a format
+# %zhead_category_count_<category>% - Displays the total of heads for a category
+# %zhead_category_count_format_<category>% - Displays the total of heads for a category with a format
 #
 ########################################################################################################################
 
@@ -48,6 +55,7 @@ inventory:
         - "&7Updated at&8: &f%updated%"
         - ""
         - "&b/zhb &8<&7head&8> &8[<&7amount&8>] [<&7player&8>]"
+        - "&b/zhb search &8<&7value&8>"
         - ""
         - "&8Credit: &7minecraft-heads.com"
   pagination:
@@ -58,3 +66,9 @@ inventory:
         - "&8%category%"
         - "&8%tags%"
         - "&fID&8: &7%id%"
+    search:
+      name: "&cSearch for heads"
+      lore:
+        - "&7/zhd search <value>"
+  search:
+    name: "&cSearch &8%count% heads"

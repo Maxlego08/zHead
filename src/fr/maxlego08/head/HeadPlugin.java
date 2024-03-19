@@ -44,6 +44,8 @@ public class HeadPlugin extends ZPlugin {
         Config.getInstance().loadConfiguration(this);
         this.loadFiles();
 
+        this.headManager.registerPlaceholders();
+
         this.postEnable();
     }
 

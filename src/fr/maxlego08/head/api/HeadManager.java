@@ -36,4 +36,6 @@ public interface HeadManager {
     void search(Player player, String value);
 
     List<Head> search(String value);
+
+    void registerPlaceholders();
 }
