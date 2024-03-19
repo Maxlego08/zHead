@@ -19,6 +19,7 @@ public class Config {
     public static ItemConfiguration headItem;
     public static ItemConfiguration paginateItem;
     public static ItemConfiguration refreshItem;
+    public static ItemConfiguration informationHead;
     public static String backItemName;
     public static String pageItemName;
 
@@ -58,6 +59,7 @@ public class Config {
         headInventoryName = configuration.getString("inventory.heads.name");
         headItem = new ItemConfiguration(configuration.getString("inventory.heads.item.name"), configuration.getStringList("inventory.heads.item.lore"));
         refreshItem = new ItemConfiguration(configuration.getString("inventory.heads.refresh.name"), configuration.getStringList("inventory.heads.refresh.lore"));
+        informationHead = new ItemConfiguration(configuration.getString("inventory.heads.informations.name"), configuration.getStringList("inventory.heads.informations.lore"));
 
         paginationInventoryName = configuration.getString("inventory.pagination.name");
         paginateItem = new ItemConfiguration(configuration.getString("inventory.pagination.item.name"), configuration.getStringList("inventory.pagination.item.lore"));

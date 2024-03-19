@@ -18,10 +18,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +35,10 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
     private final HeadPlugin plugin;
     private final Map<HeadCategory, List<Head>> heads = new HashMap<>();
+    private Date updatedAt = new Date();
 
     public ZHeadManager(HeadPlugin plugin) {
         this.plugin = plugin;
-        for (HeadCategory headCategory : HeadCategory.values()) heads.put(headCategory, new ArrayList<>());
     }
 
     @Override
@@ -42,6 +46,7 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
         File file = new File(plugin.getDataFolder(), "heads.json");
         if (file.exists() && !force) {
+            this.loadDate();
             this.loadHeads();
             return;
         }
@@ -80,10 +85,44 @@ public class ZHeadManager extends ZUtils implements HeadManager {
             exception.printStackTrace();
         }
 
+        this.updatedAt = new Date();
         long duration = System.currentTimeMillis() - ms;
         this.plugin.getLogger().info("Download done in " + duration + "ms");
 
         this.loadHeads();
+        this.saveDate();
+    }
+
+    private void saveDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String formattedDate = dateFormat.format(this.updatedAt);
+
+        File dateFile = new File(plugin.getDataFolder(), "date.txt");
+        if (dateFile.exists()) dateFile.delete();
+
+        try {
+            if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
+
+            try (FileWriter writer = new FileWriter(dateFile, false)) {
+                writer.write(formattedDate);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadDate() {
+        File dateFile = new File(plugin.getDataFolder(), "date.txt");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(dateFile))) {
+            String dateString = reader.readLine();
+
+            if (dateString != null) this.updatedAt = dateFormat.parse(dateString);
+            else this.updatedAt = new Date();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadHeads() {
@@ -93,6 +132,8 @@ public class ZHeadManager extends ZUtils implements HeadManager {
             downloadHead(true);
             return;
         }
+
+        this.heads.clear();
 
         try {
             FileReader fileReader = new FileReader(file);
@@ -154,5 +195,10 @@ public class ZHeadManager extends ZUtils implements HeadManager {
     @Override
     public ItemStack createItemStack(String id) {
         return getHead(id).map(head -> createSkull(head.getValue())).orElse(null);
+    }
+
+    @Override
+    public Date getUpdatedAt() {
+        return this.updatedAt;
     }
 }

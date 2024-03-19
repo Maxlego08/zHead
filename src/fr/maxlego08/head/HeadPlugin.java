@@ -31,7 +31,7 @@ public class HeadPlugin extends ZPlugin {
         this.saveDefaultConfig();
         this.headManager = new ZHeadManager(this);
 
-        this.registerCommand("zhead", new CommandHead(this), "head");
+        this.registerCommand("zhead", new CommandHead(this), "head", "zhd");
         this.registerInventory(EnumInventory.HEADS, new InventoryHeads());
         this.registerInventory(EnumInventory.HEADS_PAGINATION, new InventoryHeadPagination());
 

@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,4 +30,6 @@ public interface HeadManager {
     Optional<Head> getHead(String id);
 
     ItemStack createItemStack(String id);
+
+    Date getUpdatedAt();
 }

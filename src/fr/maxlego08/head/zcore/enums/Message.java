@@ -45,6 +45,7 @@ public enum Message {
 
     DESCRIPTION_RELOAD("Reload configuration files"),
     DESCRIPTION_UPDATE("Force the download of heads"),
+    DESCRIPTION_VERSION("Show plugin version"),
     DESCRIPTION_GIVE("Give a head"),
     DESCRIPTION_HELP("Show commands"),
     REFRESH("§aThe data is being updated, please wait."),

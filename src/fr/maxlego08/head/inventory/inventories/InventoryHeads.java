@@ -14,12 +14,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class InventoryHeads extends VInventory {
 
-    private final List<Integer> decorationSlot = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 50, 51, 52, 53);
+    private final List<Integer> decorationSlot = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53);
 
     @Override
     public InventoryResult openInventory(HeadPlugin plugin, Player player, int page, Object... args) throws InventoryOpenException {
@@ -31,6 +33,7 @@ public class InventoryHeads extends VInventory {
 
         displayRefresh();
         displayDecoration();
+        displayInformations();
         displayHeads(headManager);
 
         return InventoryResult.SUCCESS;
@@ -62,10 +65,19 @@ public class InventoryHeads extends VInventory {
         ItemStack itemStack = new ItemStack(Material.NETHER_STAR);
         Config.refreshItem.apply(itemStack);
 
-        addItem(49, itemStack).setClick(event -> {
+        addItem(37, itemStack).setClick(event -> {
             player.closeInventory();
             Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> this.plugin.getHeadManager().downloadHead(true));
             message(player, Message.REFRESH);
         });
+    }
+
+    private void displayInformations() {
+        ItemStack itemStack = new ItemStack(Material.BOOK);
+        Date date = this.plugin.getHeadManager().getUpdatedAt();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Config.informationHead.apply(itemStack, "%amount%", this.plugin.getHeadManager().count(), "%updated%", dateFormat.format(date));
+
+        addItem(43, itemStack);
     }
 }

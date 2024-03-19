@@ -11,6 +11,8 @@
 # /zhead - zhead.use - Display commands
 # /zhead reload - zhead.reload - Reload configurations files
 # /zhead update - zhead.update - Force the download of heads
+# /zhead version - - Display plugin version
+# /zhead give <id> [<amount>] [<player>] - zhead.give - Give a head
 #
 ########################################################################################################################
 
@@ -39,6 +41,16 @@ inventory:
       name: "&c&lRefresh"
       lore:
         - "&8Click to refresh the heads database"
+    informations:
+      name: "&e&lInformations"
+      lore:
+        - ""
+        - "&f%amount% &7heads"
+        - "&7Updated at&8: &f%updated%"
+        - ""
+        - "&b/zhb &8<&7head&8> &8[<&7amount&8>] [<&7player&8>]"
+        - ""
+        - "&8Credit: &7minecraft-heads.com"
   pagination:
     name: "&c%category% &8%count% heads"
     item:
