@@ -10,7 +10,6 @@
 # Commands:
 # /zhead - zhead.use - Display commands
 # /zhead reload - zhead.reload - Reload configurations files
-# /zhead update - zhead.update - Force the download of heads
 # /zhead version - - Display plugin version
 # /zhead give <id> [<amount>] [<player>] - zhead.give - Give a head
 #

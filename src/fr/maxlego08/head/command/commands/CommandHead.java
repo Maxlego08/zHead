@@ -12,7 +12,6 @@ public class CommandHead extends VCommand {
         super(plugin);
         this.setPermission(Permission.ZHEAD_USE);
         this.addSubCommand(new CommandHeadReload(plugin));
-        this.addSubCommand(new CommandHeadUpdate(plugin));
         this.addSubCommand(new CommandHeadHelp(plugin));
         this.addSubCommand(new CommandHeadGive(plugin));
         this.addSubCommand(new CommandHeadVersion(plugin));

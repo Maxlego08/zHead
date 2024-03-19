@@ -12,8 +12,8 @@ public class CommandHeadGive extends VCommand {
 	public CommandHeadGive(HeadPlugin plugin) {
 		super(plugin);
 		this.setPermission(Permission.ZHEAD_GIVE);
-		this.addSubCommand("reload", "rl");
-		this.setDescription(Message.DESCRIPTION_UPDATE);
+		this.addSubCommand("give", "g");
+		this.setDescription(Message.DESCRIPTION_GIVE);
 		this.addRequireArg("head id");
 		this.addOptionalArg("amount");
 		this.addOptionalArg("player");

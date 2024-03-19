@@ -44,7 +44,6 @@ public enum Message {
     RELOAD("§aYou have just reloaded the configuration files."),
 
     DESCRIPTION_RELOAD("Reload configuration files"),
-    DESCRIPTION_UPDATE("Force the download of heads"),
     DESCRIPTION_VERSION("Show plugin version"),
     DESCRIPTION_GIVE("Give a head"),
     DESCRIPTION_HELP("Show commands"),
