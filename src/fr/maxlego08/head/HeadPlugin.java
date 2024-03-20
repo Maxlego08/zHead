@@ -12,6 +12,7 @@ import fr.maxlego08.head.zcore.ZPlugin;
 import fr.maxlego08.head.zcore.enums.EnumInventory;
 import fr.maxlego08.head.zcore.utils.plugins.Metrics;
 import fr.maxlego08.head.zcore.utils.plugins.VersionChecker;
+import org.bukkit.plugin.ServicePriority;
 
 /**
  * System to create your plugins very simply Projet:
@@ -38,6 +39,7 @@ public class HeadPlugin extends ZPlugin {
         this.registerInventory(EnumInventory.HEADS, new InventoryHeads());
         this.registerInventory(EnumInventory.HEADS_PAGINATION, new InventoryHeadPagination());
         this.registerInventory(EnumInventory.SEARCH, new InventoryHeadSearch());
+        this.getServer().getServicesManager().register(HeadManager.class, this.headManager, this, ServicePriority.Highest);
 
         this.addSave(new MessageLoader(this));
 
