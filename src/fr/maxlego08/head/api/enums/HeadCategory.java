@@ -21,7 +21,7 @@ public enum HeadCategory {
 
     public static HeadCategory fromString(String string) {
         for (HeadCategory category : values()) {
-            if (category.getName().equalsIgnoreCase(string)) {
+            if (category.getName().equalsIgnoreCase(string.replace(" & ", "-"))) {
                 return category;
             }
         }

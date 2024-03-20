@@ -6,8 +6,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import fr.maxlego08.ztranslator.api.Translator;
-
 public abstract class TranslationHelper {
 
 	/**
@@ -25,14 +23,6 @@ public abstract class TranslationHelper {
 		}
 		if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
 			return itemStack.getItemMeta().getDisplayName();
-		}
-
-		if (Bukkit.getPluginManager().isPluginEnabled(Plugins.ZTRANSLATOR.getName())) {
-
-			RegisteredServiceProvider<Translator> provider = Bukkit.getServer().getServicesManager()
-					.getRegistration(Translator.class);
-			Translator translator = provider.getProvider();
-			return translator.translate(offlinePlayer, itemStack);
 		}
 		
 		String name = itemStack.serialize().get("type").toString().replace("_", " ").toLowerCase();
@@ -53,14 +43,6 @@ public abstract class TranslationHelper {
 		}
 		if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
 			return itemStack.getItemMeta().getDisplayName();
-		}
-
-		if (Bukkit.getPluginManager().isPluginEnabled(Plugins.ZTRANSLATOR.getName())) {
-
-			RegisteredServiceProvider<Translator> provider = Bukkit.getServer().getServicesManager()
-					.getRegistration(Translator.class);
-			Translator translator = provider.getProvider();
-			return translator.translate(itemStack);
 		}
 		
 		String name = itemStack.serialize().get("type").toString().replace("_", " ").toLowerCase();
