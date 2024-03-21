@@ -45,7 +45,7 @@ public class InventoryHeadPagination extends VInventory {
 
             ItemStack itemStack = inventory.createSkull(head.getValue());
             Config.paginateItem.apply(itemStack, "%name%", head.getName(), "%category%", Config.categoryNames.get(head.getHeadCategory()), "%tags%", head.getTags(), "%id%", head.getId());
-            inventory.addItem(slot, itemStack).setClick(event -> headManager.give(inventory.getPlayer(), inventory.getPlayer(), head, 1));
+            inventory.addItem(slot, itemStack).setLeftClick(event -> headManager.give(inventory.getPlayer(), inventory.getPlayer(), head, 1)).setRightClick(event -> headManager.sendInformations(inventory.getPlayer(), head));
         }
     }
 

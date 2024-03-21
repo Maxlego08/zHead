@@ -11,7 +11,7 @@ public class CommandHeadVersion extends VCommand {
 
 	public CommandHeadVersion(HeadPlugin plugin) {
 		super(plugin);
-		this.addSubCommand("version", "ver", "info", "i", "v");
+		this.addSubCommand("version", "ver", "v");
 		this.setDescription(Message.DESCRIPTION_VERSION);
 	}
 

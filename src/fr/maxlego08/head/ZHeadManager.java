@@ -3,12 +3,18 @@ package fr.maxlego08.head;
 import com.google.gson.reflect.TypeToken;
 import fr.maxlego08.head.api.Head;
 import fr.maxlego08.head.api.HeadManager;
+import fr.maxlego08.head.api.HeadSignature;
 import fr.maxlego08.head.api.enums.HeadCategory;
 import fr.maxlego08.head.placeholder.LocalPlaceholder;
 import fr.maxlego08.head.save.Config;
+import fr.maxlego08.head.signature.NMSignature;
+import fr.maxlego08.head.signature.PDCSignature;
 import fr.maxlego08.head.zcore.enums.EnumInventory;
 import fr.maxlego08.head.zcore.enums.Message;
 import fr.maxlego08.head.zcore.utils.ZUtils;
+import fr.maxlego08.head.zcore.utils.nms.NmsVersion;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -37,10 +43,12 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
     private final HeadPlugin plugin;
     private final Map<HeadCategory, List<Head>> heads = new HashMap<>();
+    private final HeadSignature headSignature;
     private Date updatedAt = new Date();
 
     public ZHeadManager(HeadPlugin plugin) {
         this.plugin = plugin;
+        this.headSignature = NmsVersion.nmsVersion.isPdcVersion() ? new PDCSignature(plugin) : new NMSignature();
     }
 
     public void registerPlaceholders() {
@@ -192,7 +200,7 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
     @Override
     public void give(CommandSender sender, Player player, Head head, int amount) {
-        ItemStack itemStack = createSkull(head.getValue());
+        ItemStack itemStack = createItemStack(head);
         itemStack.setAmount(amount);
         Config.paginateItem.applyName(itemStack, "%name%", head.getName());
         give(player, itemStack);
@@ -218,7 +226,12 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
     @Override
     public ItemStack createItemStack(String id) {
-        return getHead(id).map(head -> createSkull(head.getValue())).orElse(null);
+        return getHead(id).map(this::createItemStack).orElse(null);
+    }
+
+    @Override
+    public ItemStack createItemStack(Head head) {
+        return this.headSignature.sign(createSkull(head.getValue()), head);
     }
 
     @Override
@@ -235,5 +248,20 @@ public class ZHeadManager extends ZUtils implements HeadManager {
     @Override
     public List<Head> search(String value) {
         return this.heads.values().stream().flatMap(List::stream).filter(e -> e.getId().toLowerCase().contains(value.toLowerCase()) || e.getName().toLowerCase().contains(value.toLowerCase()) || e.getTags().toLowerCase().contains(value.toLowerCase())).collect(Collectors.toList());
+    }
+
+    @Override
+    public void sendInformations(CommandSender sender, Head head) {
+
+        message(sender, Message.INFO_MESSAGES, "%name%", head.getName(), "%category%", Config.categoryNames.get(head.getHeadCategory()), "%tags%", head.getTags(), "%id%", head.getId());
+        TextComponent textComponent = buildTextComponent(color(getMessage(Message.PREFIX) + getMessage(Message.INFO_COPY)));
+        setClickAction(textComponent, ClickEvent.Action.COPY_TO_CLIPBOARD, head.getValue());
+        setHoverMessage(textComponent, color(getMessage(Message.INFO_HOVER)));
+        sender.sendMessage(textComponent);
+    }
+
+    @Override
+    public HeadSignature getHeadSignature() {
+        return this.headSignature;
     }
 }

@@ -52,6 +52,22 @@ public enum Message {
 
     GIVE("§aYou just got the head §f%name% §8(§7%id%§8)"),
     NOT_FOUND("§cCannot find head with id§8: §f%id%"),
+
+    INFO_MESSAGES(
+            "&fCategory&8: &7%category%",
+            "&fTags&8: &7%tags%",
+            "&fID&8: &7%id%",
+            "&fWith zMenu&8: &7material: zhd:%id%"
+    ),
+    INFO_COPY("&bClick here to copy the base64 code"),
+    INFO_HOVER("&7Click here to copy the base64 code"),
+
+    DESCRIPTION_INFO("Get head informations"),
+
+    INFO_ERROR_AIR("§cNo, the air has no information."),
+    INFO_ERROR_NOT("§cThis item is not a zHead head."),
+    INFO_ERROR_HEAD("§cHead with id §f%id% §cwas not found."),
+
     ;
 
     private List<String> messages;

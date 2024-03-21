@@ -13,6 +13,7 @@
 # /zhead update - zhead.update - Force the download of heads
 # /zhead give <id> [<amount>] [<player>] - zhead.give - Give a head
 # /zhead search <value> - zhead.search - Search heads
+# /zhead info - zhead.info - Get head informations
 #
 # Placeholders:
 # %zhead_count% - Displays the total of heads
@@ -66,6 +67,9 @@ inventory:
         - "&8%category%"
         - "&8%tags%"
         - "&fID&8: &7%id%"
+        - ""
+        - "&f&nLeft click&r&7 to get head"
+        - "&f&nRight click&r&7 to display information"
     search:
       name: "&cSearch for heads"
       lore:
