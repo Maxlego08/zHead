@@ -264,4 +264,10 @@ public class ZHeadManager extends ZUtils implements HeadManager {
     public HeadSignature getHeadSignature() {
         return this.headSignature;
     }
+
+    @Override
+    public List<Head> getHeads() {
+        return this.heads.values().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
 }

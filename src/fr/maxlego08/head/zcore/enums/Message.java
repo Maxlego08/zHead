@@ -63,6 +63,7 @@ public enum Message {
     INFO_HOVER("&7Click here to copy the base64 code"),
 
     DESCRIPTION_INFO("Get head informations"),
+    DESCRIPTION_RANDOM("Get a random head"),
 
     INFO_ERROR_AIR("§cNo, the air has no information."),
     INFO_ERROR_NOT("§cThis item is not a zHead head."),

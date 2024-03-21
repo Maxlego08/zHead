@@ -45,4 +45,6 @@ public interface HeadManager {
     void sendInformations(CommandSender sender, Head head);
 
     HeadSignature getHeadSignature();
+
+    List<Head> getHeads();
 }
