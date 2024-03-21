@@ -63,11 +63,15 @@ public enum Message {
     INFO_HOVER("&7Click here to copy the base64 code"),
 
     DESCRIPTION_INFO("Get head informations"),
+    DESCRIPTION_SAVE("Save head informations"),
     DESCRIPTION_RANDOM("Get a random head"),
 
     INFO_ERROR_AIR("§cNo, the air has no information."),
     INFO_ERROR_NOT("§cThis item is not a zHead head."),
     INFO_ERROR_HEAD("§cHead with id §f%id% §cwas not found."),
+
+    SAVE_ERROR_NAME("§cThe name already exists for this item, please select another one."),
+    SAVE_SUCCESS("§aYou just saved the item §f%name%§a."),
 
     ;
 

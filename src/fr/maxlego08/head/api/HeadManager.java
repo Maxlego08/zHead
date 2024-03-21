@@ -49,4 +49,6 @@ public interface HeadManager {
     List<Head> getHeads();
 
     List<String> searchHeads(String arg);
+
+    void saveHead(CommandSender sender, Head head);
 }
