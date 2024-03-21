@@ -21,8 +21,9 @@
 #
 # Commands:
 # /zhead - zhead.use - Display commands
+# /zhead help - zhead.help - Show help commands
+# /zhead version - - Show plugin version
 # /zhead reload - zhead.reload - Reload configurations files
-# /zhead update - zhead.update - Force the download of heads
 # /zhead give <id> [<amount>] [<player>] - zhead.give - Give a head
 # /zhead search <value> - zhead.search - Search heads
 # /zhead info - zhead.info - Get head informations
