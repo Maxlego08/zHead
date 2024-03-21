@@ -34,6 +34,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -308,6 +309,9 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
         configuration.set("items." + name + ".material", "zhd:" + head.getId());
         configuration.set("items." + name + ".url", head.getValue());
+
+        configuration.setComments("items." + name + ".material", Arrays.asList("Material to use with zMenu, you need zHead to use this. Documentation: https://docs.zmenu.dev/configurations/items#material"));
+        configuration.setComments("items." + name + ".url", Arrays.asList("URL to use with zMenu, you don't need zHead to use this. Documentation: https://docs.zmenu.dev/configurations/items#url"));
 
         try {
             configuration.save(file);
