@@ -47,4 +47,6 @@ public interface HeadManager {
     HeadSignature getHeadSignature();
 
     List<Head> getHeads();
+
+    List<String> searchHeads(String arg);
 }

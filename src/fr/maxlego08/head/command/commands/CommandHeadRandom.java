@@ -15,6 +15,8 @@ public class CommandHeadRandom extends VCommand {
         this.setPermission(Permission.ZHEAD_RANDOM);
         this.addSubCommand("random");
         this.setDescription(Message.DESCRIPTION_RANDOM);
+        this.addOptionalArg("amount");
+        this.addOptionalArg("player");
     }
 
     @Override

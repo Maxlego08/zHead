@@ -270,4 +270,14 @@ public class ZHeadManager extends ZUtils implements HeadManager {
         return this.heads.values().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> searchHeads(String arg) {
+        return getHeads().stream()
+                .map(head -> head.getName().replace(" ", "_").toLowerCase())
+                .filter(name -> name.contains(arg.toLowerCase()))
+                .distinct().sorted()
+                .collect(Collectors.toList());
+    }
+
+
 }
