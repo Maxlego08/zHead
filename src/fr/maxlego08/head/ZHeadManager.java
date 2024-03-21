@@ -255,7 +255,7 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
         message(sender, Message.INFO_MESSAGES, "%name%", head.getName(), "%category%", Config.categoryNames.get(head.getHeadCategory()), "%tags%", head.getTags(), "%id%", head.getId());
         TextComponent textComponent = buildTextComponent(color(getMessage(Message.PREFIX) + getMessage(Message.INFO_COPY)));
-        setClickAction(textComponent, ClickEvent.Action.COPY_TO_CLIPBOARD, head.getValue());
+        setClickAction(textComponent, ClickEvent.Action.SUGGEST_COMMAND, head.getValue());
         setHoverMessage(textComponent, color(getMessage(Message.INFO_HOVER)));
         sender.sendMessage(textComponent);
     }
