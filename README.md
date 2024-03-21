@@ -1,6 +1,6 @@
 # zHead Database
 
-Plugin using minecraft-head.com database
+We would like to extend our heartfelt thanks to [Minecraft-Heads.com](https://minecraft-heads.com/) for providing their API, which has been an invaluable source of all the data used in our project.
 
 # API
 
@@ -24,7 +24,6 @@ Maven
 ```
 
 ```java
-
 public void example(){
     HeadManager headManager = getProvider(HeadManager.class);
     ItemStack itemStack = headManager.createItemStack(<head id>); # Create an itemstack using an head ID, if the id doesn't exist the itemstack will be null
