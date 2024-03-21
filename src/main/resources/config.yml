@@ -7,12 +7,27 @@
 # ███████╗██║░░██║███████╗██║░░██║██████╔╝
 # ╚══════╝╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝╚═════╝░
 #
+# We would like to extend our heartfelt thanks to Minecraft-Heads.com for providing their API, which has been an invaluable source of all the data used in our project.
+# https://minecraft-heads.com/
+#
+# Looking for a Premium version of zHead ? We recommend HeadDataBase: https://www.spigotmc.org/resources/head-database.14280/
+#
+# Sponsor: https://minecraft-inventory-builder.com/ - Online inventory editor
+#
+# Spigot: https://www.spigotmc.org/resources/zhead-database.115717/
+# Github: https://github.com/Maxlego08/zHead
+#
+# Looking for an inventory plugin compatible with zHead? Use zMenu: https://www.spigotmc.org/resources/110402/
+#
 # Commands:
 # /zhead - zhead.use - Display commands
+# /zhead help - zhead.help - Show help commands
+# /zhead version - - Show plugin version
 # /zhead reload - zhead.reload - Reload configurations files
-# /zhead update - zhead.update - Force the download of heads
 # /zhead give <id> [<amount>] [<player>] - zhead.give - Give a head
 # /zhead search <value> - zhead.search - Search heads
+# /zhead info - zhead.info - Get head informations
+# /zhead random [<amount>] [<player>] - zhead.random - Get a random head
 #
 # Placeholders:
 # %zhead_count% - Displays the total of heads
@@ -66,6 +81,9 @@ inventory:
         - "&8%category%"
         - "&8%tags%"
         - "&fID&8: &7%id%"
+        - ""
+        - "&f&nLeft click&r&7 to get head"
+        - "&f&nRight click&r&7 to display information"
     search:
       name: "&cSearch for heads"
       lore:

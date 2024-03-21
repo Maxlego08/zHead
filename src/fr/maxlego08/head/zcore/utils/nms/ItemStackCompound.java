@@ -4,6 +4,25 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemStackCompound {
 
+    /**
+     * Singleton instance of ItemStackCompound based on the current NmsVersion.
+     */
+    public static ItemStackCompound itemStackCompound;
+
+    // Static block to initialize the itemStackCompound based on the NmsVersion
+    static {
+        NmsVersion nmsVersion = NmsVersion.nmsVersion;
+        if (nmsVersion == NmsVersion.V_1_18_2) {
+            itemStackCompound = new ItemStackCompound(EnumReflectionCompound.V1_18_2);
+        } else if (nmsVersion.getVersion() >= 1200) {
+            itemStackCompound = new ItemStackCompound(EnumReflectionCompound.V1_12);
+        } else if (nmsVersion.getVersion() >= 1190) {
+            itemStackCompound = new ItemStackCompound(EnumReflectionCompound.V1_19);
+        } else if (nmsVersion.getVersion() >= 1170) {
+            itemStackCompound = new ItemStackCompound(EnumReflectionCompound.V1_17);
+        } else itemStackCompound = new ItemStackCompound(EnumReflectionCompound.V1_8_8);
+    }
+
     private final EnumReflectionCompound reflection;
 
     public ItemStackCompound(EnumReflectionCompound reflection) {
@@ -281,8 +300,10 @@ public class ItemStackCompound {
                 "setBoolean", "setFloat", "setDouble", "setLong", "setInt", "setString"),
         V1_18_2("t", "c", "e", "q", "j", "k", "i", "h", "l", "a", "a", "a", "a", "a", "a"),
         V1_12("v", "c", "e", "q", "j", "k", "i", "h", "l", "a", "a", "a", "a", "a", "a"),
+        V1_17("s", "c", "e", "q", "j", "k", "i", "h", "l", "a", "a", "a", "a", "a", "a"),
         V1_19("u", "c", "e", "q", "j", "k", "i", "h", "l", "a", "a", "a", "a", "a", "a"),
         V_OTHER("s", "c", "e", "q", "j", "k", "i", "h", "l", "a", "a", "a", "a", "a", "a"),
+
 
         ;
 
