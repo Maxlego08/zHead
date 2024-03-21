@@ -7,6 +7,18 @@
 # ███████╗██║░░██║███████╗██║░░██║██████╔╝
 # ╚══════╝╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝╚═════╝░
 #
+# We would like to extend our heartfelt thanks to Minecraft-Heads.com for providing their API, which has been an invaluable source of all the data used in our project.
+# https://minecraft-heads.com/
+#
+# Looking for a Premium version of zHead ? We recommend HeadDataBase: https://www.spigotmc.org/resources/head-database.14280/
+#
+# Sponsor: https://minecraft-inventory-builder.com/ - Online inventory editor
+#
+# Spigot: https://www.spigotmc.org/resources/zhead-database.115717/
+# Github: https://github.com/Maxlego08/zHead
+#
+# Looking for an inventory plugin compatible with zHead? Use zMenu: https://www.spigotmc.org/resources/110402/
+#
 # Commands:
 # /zhead - zhead.use - Display commands
 # /zhead reload - zhead.reload - Reload configurations files
