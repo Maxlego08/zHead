@@ -3,6 +3,6 @@ author: Maxlego08
 main: fr.maxlego08.head.HeadPlugin
 website: https://groupez.dev
 description: Simple Head Plugin
-version: 1.2
+version: 1.3
 api-version: 1.13
 commands:
