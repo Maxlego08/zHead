@@ -75,6 +75,8 @@ public enum Message {
 
     OPEN_NO_PERMISSION("§cYou do not have permission to open this category"),
 
+    GIVE_HEAD("§aYou just got the player’s head §f%name%§a."),
+
     ;
 
     private List<String> messages;

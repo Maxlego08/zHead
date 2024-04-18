@@ -924,6 +924,31 @@ public abstract class ZUtils extends MessageUtils {
     }
 
     /**
+     * Permet d'obtenir la tête d'un joueur en utilisation le système de
+     * configuration des inventaires
+     *
+     * @param player Player
+     * @return itemstack
+     */
+    public ItemStack playerHead(OfflinePlayer player) {
+        ItemStack itemStack = playerHead();
+        if (NMSUtils.isNewVersion()) {
+            if (itemStack.getType().equals(Material.PLAYER_HEAD)) {
+                SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
+                meta.setOwningPlayer(player);
+                itemStack.setItemMeta(meta);
+            }
+        } else {
+            if (itemStack.getType().equals(getMaterial(397)) && itemStack.getData().getData() == 3) {
+                SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
+                meta.setOwner(player.getName());
+                itemStack.setItemMeta(meta);
+            }
+        }
+        return itemStack;
+    }
+
+    /**
      * Allows you to get an itemstack to create a player's head
      *
      * @return itemstack
