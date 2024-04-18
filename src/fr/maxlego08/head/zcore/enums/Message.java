@@ -73,6 +73,8 @@ public enum Message {
     SAVE_ERROR_NAME("§cThe name already exists for this item, please select another one."),
     SAVE_SUCCESS("§aYou just saved the item §f%name%§a."),
 
+    OPEN_NO_PERMISSION("§cYou do not have permission to open this category"),
+
     ;
 
     private List<String> messages;
