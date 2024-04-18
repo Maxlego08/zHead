@@ -16,6 +16,8 @@ import fr.maxlego08.head.zcore.utils.nms.NmsVersion;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
@@ -32,11 +34,13 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ZHeadManager extends ZUtils implements HeadManager {
@@ -279,5 +283,42 @@ public class ZHeadManager extends ZUtils implements HeadManager {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void saveHead(CommandSender sender, Head head) {
 
+        File file = new File(this.plugin.getDataFolder(), "save_items.yml");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+
+        YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+
+        ConfigurationSection configurationSection = configuration.getConfigurationSection("items.");
+        String name = head.getName();
+        if (configurationSection != null) {
+            Set<String> names = configurationSection.getKeys(false);
+            if (names.contains(name)) {
+                message(sender, Message.SAVE_ERROR_NAME);
+                return;
+            }
+        }
+
+        configuration.set("items." + name + ".material", "zhd:" + head.getId());
+        configuration.set("items." + name + ".url", head.getValue());
+
+        configuration.setComments("items." + name + ".material", Arrays.asList("Material to use with zMenu, you need zHead to use this. Documentation: https://docs.zmenu.dev/configurations/items#material"));
+        configuration.setComments("items." + name + ".url", Arrays.asList("URL to use with zMenu, you don't need zHead to use this. Documentation: https://docs.zmenu.dev/configurations/items#url"));
+
+        try {
+            configuration.save(file);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+        message(sender, Message.SAVE_SUCCESS, "%name%", name);
+    }
 }

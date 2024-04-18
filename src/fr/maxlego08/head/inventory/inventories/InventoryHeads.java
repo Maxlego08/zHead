@@ -7,6 +7,7 @@ import fr.maxlego08.head.exceptions.InventoryOpenException;
 import fr.maxlego08.head.inventory.VInventory;
 import fr.maxlego08.head.save.Config;
 import fr.maxlego08.head.zcore.enums.Message;
+import fr.maxlego08.head.zcore.enums.Permission;
 import fr.maxlego08.head.zcore.utils.inventory.InventoryResult;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,7 +32,9 @@ public class InventoryHeads extends VInventory {
 
         createInventory(color(getMessage(Config.headInventoryName, "%count%", simplifyNumber(counts))), 54);
 
-        displayRefresh();
+        if (hasPermission(player, Permission.ZHEAD_REFRESH)) {
+            displayRefresh();
+        }
         displayDecoration();
         displayInformations();
         displayHeads(headManager);
@@ -56,7 +59,13 @@ public class InventoryHeads extends VInventory {
             ItemStack itemStack = createSkull(headCategory.getUrl());
             Config.headItem.apply(itemStack, "%category%", Config.categoryNames.get(headCategory), "%count%", format(headManager.count(headCategory)));
 
-            addItem(slot++, itemStack).setClick(event -> headManager.openCategory(player, headCategory, 1));
+            addItem(slot++, itemStack).setClick(event -> {
+                if (hasPermission(this.player, headCategory.getPermission())) {
+                    headManager.openCategory(player, headCategory, 1);
+                } else {
+                    message(this.player, Message.OPEN_NO_PERMISSION);
+                }
+            });
             if (slot == 17) slot = 19;
         }
     }
