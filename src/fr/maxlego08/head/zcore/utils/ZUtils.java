@@ -10,7 +10,7 @@ import fr.maxlego08.head.zcore.enums.Permission;
 import fr.maxlego08.head.zcore.utils.builder.CooldownBuilder;
 import fr.maxlego08.head.zcore.utils.builder.TimerBuilder;
 import fr.maxlego08.head.zcore.utils.nms.ItemStackUtils;
-import fr.maxlego08.head.zcore.utils.nms.NMSUtils;
+import fr.maxlego08.head.zcore.utils.nms.NmsVersion;
 import fr.maxlego08.head.zcore.utils.players.ActionBar;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -75,12 +75,12 @@ public abstract class ZUtils extends MessageUtils {
 
     private static final UUID RANDOM_UUID = UUID.fromString("92864445-51c5-4c3b-9039-517c9927d1b4");
     private static final SimpleCache<String, Object> cache = new SimpleCache<>();
-    private static final List<String> teleportPlayers = new ArrayList<String>();
+    private static final List<String> teleportPlayers = new ArrayList<>();
     // For plugin support from 1.8 to 1.12
     private static Material[] byId;
 
     static {
-        if (!NMSUtils.isNewVersion()) {
+        if (!NmsVersion.nmsVersion.isNewMaterial()) {
             byId = new Material[0];
             for (Material material : Material.values()) {
                 if (byId.length > material.getId()) {
@@ -540,13 +540,9 @@ public abstract class ZUtils extends MessageUtils {
         return element.get(random.nextInt(element.size()));
     }
 
-    /**
-     * @param message
-     * @return
-     */
     public String color(String message) {
         if (message == null) return null;
-        if (NMSUtils.isHexColor()) {
+        if (NmsVersion.nmsVersion.isHexVersion()) {
             Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
             Matcher matcher = pattern.matcher(message);
             while (matcher.find()) {
@@ -684,8 +680,7 @@ public abstract class ZUtils extends MessageUtils {
         if (value < 10000) return format(value, "#.#");
         else if (value < 1000000) return Integer.valueOf((int) (value / 1000)) + "k ";
         else if (value < 1000000000) return format((value / 1000) / 1000, "#.#") + "m ";
-        else if (value < 1000000000000L)
-            return Integer.valueOf((int) (((value / 1000) / 1000) / 1000)) + "M ";
+        else if (value < 1000000000000L) return Integer.valueOf((int) (((value / 1000) / 1000) / 1000)) + "M ";
         else return "to much";
     }
 
@@ -697,8 +692,7 @@ public abstract class ZUtils extends MessageUtils {
         if (value < 10000) return format(value, "#.#");
         else if (value < 1000000) return Integer.valueOf((int) (value / 1000)) + "k ";
         else if (value < 1000000000) return format((value / 1000) / 1000, "#.#") + "m ";
-        else if (value < 1000000000000L)
-            return Integer.valueOf((int) (((value / 1000) / 1000) / 1000)) + "M ";
+        else if (value < 1000000000000L) return Integer.valueOf((int) (((value / 1000) / 1000) / 1000)) + "M ";
         else return "to much";
     }
 
@@ -901,7 +895,7 @@ public abstract class ZUtils extends MessageUtils {
      */
     public ItemStack playerHead(ItemStack itemStack, OfflinePlayer player) {
         String name = itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : null;
-        if (NMSUtils.isNewVersion()) {
+        if (NmsVersion.nmsVersion.isNewMaterial()) {
             if (itemStack.getType().equals(Material.PLAYER_HEAD) && name != null && name.startsWith("HEAD")) {
                 SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
                 name = name.replace("HEAD", "");
@@ -932,7 +926,7 @@ public abstract class ZUtils extends MessageUtils {
      */
     public ItemStack playerHead(OfflinePlayer player) {
         ItemStack itemStack = playerHead();
-        if (NMSUtils.isNewVersion()) {
+        if (NmsVersion.nmsVersion.isNewMaterial()) {
             if (itemStack.getType().equals(Material.PLAYER_HEAD)) {
                 SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
                 meta.setOwningPlayer(player);
@@ -954,7 +948,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return itemstack
      */
     protected ItemStack playerHead() {
-        return NMSUtils.isNewVersion() ? new ItemStack(Material.PLAYER_HEAD) : new ItemStack(getMaterial(397), 1, (byte) 3);
+        return NmsVersion.nmsVersion.isNewMaterial() ? new ItemStack(Material.PLAYER_HEAD) : new ItemStack(getMaterial(397), 1, (byte) 3);
     }
 
     /**
@@ -963,7 +957,7 @@ public abstract class ZUtils extends MessageUtils {
      * @return itemstack
      */
     protected ItemStack blackGlassPane() {
-        return NMSUtils.isNewVersion() ? new ItemStack(Material.BLACK_STAINED_GLASS_PANE) : new ItemStack(getMaterial(160), 1, (byte) 7);
+        return NmsVersion.nmsVersion.isNewMaterial() ? new ItemStack(Material.BLACK_STAINED_GLASS_PANE) : new ItemStack(getMaterial(160), 1, (byte) 7);
     }
 
     /**
@@ -1019,7 +1013,7 @@ public abstract class ZUtils extends MessageUtils {
      */
     protected boolean isPlayerHead(ItemStack itemStack) {
         Material material = itemStack.getType();
-        if (NMSUtils.isNewVersion()) return material.equals(Material.PLAYER_HEAD);
+        if (NmsVersion.nmsVersion.isNewMaterial()) return material.equals(Material.PLAYER_HEAD);
         return (material.equals(getMaterial(397))) && (itemStack.getDurability() == 3);
     }
 
@@ -1034,7 +1028,7 @@ public abstract class ZUtils extends MessageUtils {
      */
     protected Object getPrivateField(Object object, String field) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Class<?> clazz = object.getClass();
-        Field objectField = field.equals("commandMap") ? clazz.getDeclaredField(field) : field.equals("knownCommands") ? NMSUtils.isNewVersion() ? clazz.getSuperclass().getDeclaredField(field) : clazz.getDeclaredField(field) : null;
+        Field objectField = field.equals("commandMap") ? clazz.getDeclaredField(field) : field.equals("knownCommands") ? NmsVersion.nmsVersion.isNewMaterial() ? clazz.getSuperclass().getDeclaredField(field) : clazz.getDeclaredField(field) : null;
         objectField.setAccessible(true);
         Object result = objectField.get(object);
         objectField.setAccessible(false);
@@ -1075,7 +1069,7 @@ public abstract class ZUtils extends MessageUtils {
     public void glow(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
-        if (NMSUtils.getNMSVersion() != 1.7) itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemStack.setItemMeta(itemMeta);
     }
 
@@ -1222,7 +1216,7 @@ public abstract class ZUtils extends MessageUtils {
             return head;
         }
 
-        if (NMSUtils.isNewHeadApi()) {
+        if (NmsVersion.nmsVersion.isNewHeadApi()) {
             this.applyTextureUrl(head, url);
         } else {
             this.applyTexture(head, url);

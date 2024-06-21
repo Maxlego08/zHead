@@ -1,7 +1,7 @@
 package fr.maxlego08.head.zcore.utils;
 
 import fr.maxlego08.head.zcore.enums.Message;
-import fr.maxlego08.head.zcore.utils.nms.NMSUtils;
+import fr.maxlego08.head.zcore.utils.nms.NmsVersion;
 import fr.maxlego08.head.zcore.utils.players.ActionBar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public abstract class MessageUtils extends LocationUtils {
 
-    private final transient static int CENTER_PX = 154;
+    private final static int CENTER_PX = 154;
 
     /**
      * @param player
@@ -71,8 +71,7 @@ public abstract class MessageUtils extends LocationUtils {
             switch (message.getType()) {
                 case CENTER:
                     if (message.getMessages().size() > 0) {
-                        message.getMessages()
-                                .forEach(msg -> sender.sendMessage(this.getCenteredMessage(this.papi(getMessage(msg, args), player))));
+                        message.getMessages().forEach(msg -> sender.sendMessage(this.getCenteredMessage(this.papi(getMessage(msg, args), player))));
                     } else {
                         sender.sendMessage(this.getCenteredMessage(this.papi(getMessage(message, args), player)));
                     }
@@ -83,8 +82,7 @@ public abstract class MessageUtils extends LocationUtils {
                     break;
                 case TCHAT:
                     if (message.getMessages().size() > 0) {
-                        message.getMessages()
-                                .forEach(msg -> sender.sendMessage(this.papi(Message.PREFIX.msg() + getMessage(msg, args), player)));
+                        message.getMessages().forEach(msg -> sender.sendMessage(this.papi(Message.PREFIX.msg() + getMessage(msg, args), player)));
                     } else {
                         sender.sendMessage(this.papi(Message.PREFIX.msg() + getMessage(message, args), player));
                     }
@@ -96,8 +94,7 @@ public abstract class MessageUtils extends LocationUtils {
                     int fadeInTime = message.getStart();
                     int showTime = message.getTime();
                     int fadeOutTime = message.getEnd();
-                    this.title(player, this.papi(this.getMessage(title, args), player), this.papi(this.getMessage(subTitle, args), player), fadeInTime, showTime,
-                            fadeOutTime);
+                    this.title(player, this.papi(this.getMessage(title, args), player), this.papi(this.getMessage(subTitle, args), player), fadeInTime, showTime, fadeOutTime);
                     break;
                 default:
                     break;
@@ -107,11 +104,6 @@ public abstract class MessageUtils extends LocationUtils {
         }
     }
 
-    /**
-     * @param player
-     * @param message
-     * @param args
-     */
     protected void broadcast(Message message, Object... args) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             message(player, message, args);
@@ -147,8 +139,7 @@ public abstract class MessageUtils extends LocationUtils {
 
     protected final Class<?> getNMSClass(String name) {
         try {
-            return Class.forName("net.minecraft.server."
-                    + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + name);
+            return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3] + "." + name);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -167,29 +158,19 @@ public abstract class MessageUtils extends LocationUtils {
      */
     protected void title(Player player, String title, String subtitle, int fadeInTime, int showTime, int fadeOutTime) {
 
-        if (NMSUtils.isNewVersion()) {
+        if (NmsVersion.nmsVersion.isNewMaterial()) {
             player.sendTitle(title, subtitle, fadeInTime, showTime, fadeOutTime);
             return;
         }
 
         try {
-            Object chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
-                    .invoke(null, "{\"text\": \"" + title + "\"}");
-            Constructor<?> titleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(
-                    getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"),
-                    int.class, int.class, int.class);
-            Object packet = titleConstructor.newInstance(
-                    getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TITLE").get(null), chatTitle,
-                    fadeInTime, showTime, fadeOutTime);
+            Object chatTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\": \"" + title + "\"}");
+            Constructor<?> titleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), int.class, int.class, int.class);
+            Object packet = titleConstructor.newInstance(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("TITLE").get(null), chatTitle, fadeInTime, showTime, fadeOutTime);
 
-            Object chatsTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class)
-                    .invoke(null, "{\"text\": \"" + subtitle + "\"}");
-            Constructor<?> timingTitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(
-                    getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"),
-                    int.class, int.class, int.class);
-            Object timingPacket = timingTitleConstructor.newInstance(
-                    getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get(null),
-                    chatsTitle, fadeInTime, showTime, fadeOutTime);
+            Object chatsTitle = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0].getMethod("a", String.class).invoke(null, "{\"text\": \"" + subtitle + "\"}");
+            Constructor<?> timingTitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0], getNMSClass("IChatBaseComponent"), int.class, int.class, int.class);
+            Object timingPacket = timingTitleConstructor.newInstance(getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0].getField("SUBTITLE").get(null), chatsTitle, fadeInTime, showTime, fadeOutTime);
 
             sendPacket(player, packet);
             sendPacket(player, timingPacket);
@@ -217,8 +198,7 @@ public abstract class MessageUtils extends LocationUtils {
      * @return message
      */
     protected String getCenteredMessage(String message) {
-        if (message == null || message.equals(""))
-            return "";
+        if (message == null || message.equals("")) return "";
         message = ChatColor.translateAlternateColorCodes('&', message);
 
         int messagePxSize = 0;
@@ -230,10 +210,7 @@ public abstract class MessageUtils extends LocationUtils {
                 previousCode = true;
             } else if (previousCode) {
                 previousCode = false;
-                if (c == 'l' || c == 'L') {
-                    isBold = true;
-                } else
-                    isBold = false;
+                isBold = c == 'l' || c == 'L';
             } else {
                 DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
                 messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
@@ -250,7 +227,7 @@ public abstract class MessageUtils extends LocationUtils {
             sb.append(" ");
             compensated += spaceLength;
         }
-        return sb.toString() + message;
+        return sb + message;
     }
 
     protected void broadcastCenterMessage(List<String> messages) {
