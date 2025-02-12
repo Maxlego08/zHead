@@ -15,6 +15,13 @@ import fr.maxlego08.head.zcore.utils.plugins.Metrics;
 import fr.maxlego08.head.zcore.utils.plugins.VersionChecker;
 import org.bukkit.plugin.ServicePriority;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * System to create your plugins very simply Projet:
  * <a href="https://github.com/Maxlego08/TemplatePlugin">https://github.com/Maxlego08/TemplatePlugin</a>
@@ -45,7 +52,7 @@ public class HeadPlugin extends ZPlugin {
 
         this.addSave(new MessageLoader(this));
 
-        this.headManager.downloadHead(false);
+        this.headManager.downloadHead(isDateBeforeLimit(new File(getDataFolder(), "date.txt"), LocalDateTime.of(2025, 2, 12, 0, 0, 0)));
 
         Config.getInstance().loadConfiguration(this);
         this.loadFiles();
@@ -72,4 +79,35 @@ public class HeadPlugin extends ZPlugin {
     public HeadManager getHeadManager() {
         return headManager;
     }
+
+    public boolean isDateBeforeLimit(File file, LocalDateTime localDateTime) {
+
+        if (!file.exists()) return false;
+
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String dateContent = reader.readLine();
+
+            if (dateContent == null || dateContent.trim().isEmpty()) {
+                return false;
+            }
+
+            LocalDateTime fileDate = LocalDateTime.parse(dateContent.trim(), DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+            return fileDate.isBefore(localDateTime);
+        } catch (IOException | java.time.format.DateTimeParseException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return false;
+    }
+
 }
