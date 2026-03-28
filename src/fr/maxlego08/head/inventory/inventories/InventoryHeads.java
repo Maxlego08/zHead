@@ -76,7 +76,7 @@ public class InventoryHeads extends VInventory {
 
         addItem(37, itemStack).setClick(event -> {
             player.closeInventory();
-            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> this.plugin.getHeadManager().downloadHead(true));
+            Bukkit.getAsyncScheduler().runNow(this.plugin, (task) -> this.plugin.getHeadManager().downloadHead(true));
             message(player, Message.REFRESH);
         });
     }

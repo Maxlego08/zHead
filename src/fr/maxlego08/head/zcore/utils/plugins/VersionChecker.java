@@ -92,7 +92,7 @@ public class VersionChecker implements Listener {
 	 *            - Do something after
 	 */
 	public void getVersion(Consumer<String> consumer) {
-		Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+		Bukkit.getAsyncScheduler().runNow(this.plugin, (task) -> {
 			final String apiURL = String.format(URL_API, this.pluginID);
 			try {
 				URL url = new URL(apiURL);
