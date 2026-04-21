@@ -21,7 +21,7 @@ public class CommandPlayerHead extends VCommand {
     @Override
     protected CommandType perform(HeadPlugin plugin) {
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        Bukkit.getAsyncScheduler().runNow(plugin, (task) -> {
             OfflinePlayer offlinePlayer = this.argAsOfflinePlayer(0);
             ItemStack itemStack = playerHead(offlinePlayer);
             give(this.player, itemStack);

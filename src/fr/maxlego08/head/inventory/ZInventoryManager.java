@@ -223,7 +223,7 @@ public class ZInventoryManager extends ListenerAdapter {
 				.collect(Collectors.toList()).iterator();
 		while (iterator.hasNext()) {
 			VInventory inventory = iterator.next();
-			Bukkit.getScheduler().runTask(this.plugin, () -> createInventory(inventory, inventory.getPlayer()));
+			Bukkit.getGlobalRegionScheduler().run(this.plugin, (task) -> createInventory(inventory, inventory.getPlayer()));
 		}
 	}
 
