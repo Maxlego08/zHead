@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.maxlego08.head"
-version = "1.5"
+version = "1.6"
 
 repositories {
     mavenCentral()
