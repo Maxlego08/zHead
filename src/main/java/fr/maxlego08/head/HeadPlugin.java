@@ -1,5 +1,6 @@
 package fr.maxlego08.head;
 
+import dev.faststats.bukkit.BukkitContext;
 import fr.maxlego08.head.api.HeadManager;
 import fr.maxlego08.head.command.commands.CommandHead;
 import fr.maxlego08.head.command.commands.CommandPlayerHead;
@@ -30,6 +31,9 @@ import java.time.format.DateTimeFormatter;
  */
 public class HeadPlugin extends ZPlugin {
 
+    private final BukkitContext context = new BukkitContext.Factory(this, "58aaa2082feb70f3b317beefe748e445")
+            .metrics(dev.faststats.Metrics.Factory::create)
+            .create();
     private HeadManager headManager;
 
     @Override
@@ -62,6 +66,7 @@ public class HeadPlugin extends ZPlugin {
         new Metrics(this, 21364);
         VersionChecker versionChecker = new VersionChecker(this, 317);
         versionChecker.useLastVersion();
+        this.context.ready();
 
         this.postEnable();
     }
@@ -72,6 +77,7 @@ public class HeadPlugin extends ZPlugin {
         this.preDisable();
 
         this.saveFiles();
+        this.context.shutdown();
 
         this.postDisable();
     }
