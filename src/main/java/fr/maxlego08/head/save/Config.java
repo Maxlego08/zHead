@@ -4,26 +4,26 @@ import fr.maxlego08.head.HeadPlugin;
 import fr.maxlego08.head.api.enums.HeadCategory;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class Config {
 
-    public static boolean enableDebug = true;
-    public static boolean enableDebugTime = false;
+    public static volatile boolean enableDebug = true;
+    public static volatile boolean enableDebugTime = false;
 
-    public static Map<HeadCategory, String> categoryNames = new HashMap<>();
+    public static Map<HeadCategory, String> categoryNames = new ConcurrentHashMap<>();
 
-    public static String headInventoryName;
-    public static String searchInventoryName;
-    public static String paginationInventoryName;
-    public static ItemConfiguration headItem;
-    public static ItemConfiguration paginateItem;
-    public static ItemConfiguration refreshItem;
-    public static ItemConfiguration informationItem;
-    public static ItemConfiguration searchItem;
-    public static String backItemName;
-    public static String pageItemName;
+    public static volatile String headInventoryName;
+    public static volatile String searchInventoryName;
+    public static volatile String paginationInventoryName;
+    public static volatile ItemConfiguration headItem;
+    public static volatile ItemConfiguration paginateItem;
+    public static volatile ItemConfiguration refreshItem;
+    public static volatile ItemConfiguration informationItem;
+    public static volatile ItemConfiguration searchItem;
+    public static volatile String backItemName;
+    public static volatile String pageItemName;
 
     /**
      * static Singleton instance.

@@ -1,13 +1,13 @@
 package fr.maxlego08.head.zcore.utils;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 public class SimpleCache<K, V> {
     private final Map<K, V> cache;
 
     public SimpleCache() {
-        this.cache = new HashMap<>();
+        this.cache = new ConcurrentHashMap<>();
     }
 
     public V get(K key, Loader<V> loader) {

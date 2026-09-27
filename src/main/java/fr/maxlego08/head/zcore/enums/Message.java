@@ -78,13 +78,13 @@ public enum Message {
 
     ;
 
-    private List<String> messages;
-    private String message;
-    private Map<String, Object> titles = new HashMap<>();
-    private boolean use = true;
-    private MessageType type = MessageType.TCHAT;
+    private volatile List<String> messages;
+    private volatile String message;
+    private volatile Map<String, Object> titles = new HashMap<>();
+    private volatile boolean use = true;
+    private volatile MessageType type = MessageType.TCHAT;
 
-    private ItemStack itemStack;
+    private volatile ItemStack itemStack;
 
     /**
      * @param message

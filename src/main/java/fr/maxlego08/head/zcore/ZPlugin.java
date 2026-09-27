@@ -9,6 +9,7 @@ import fr.maxlego08.head.placeholder.LocalPlaceholder;
 import fr.maxlego08.head.placeholder.Placeholder;
 import fr.maxlego08.head.zcore.enums.EnumInventory;
 import fr.maxlego08.head.zcore.utils.gson.HeadAdapter;
+import fr.maxlego08.head.zcore.utils.scheduler.PlatformScheduler;
 import fr.maxlego08.head.zcore.utils.storage.Persist;
 import fr.maxlego08.head.zcore.utils.storage.Savable;
 import fr.maxlego08.head.HeadPlugin;
@@ -45,6 +46,7 @@ public abstract class ZPlugin extends JavaPlugin {
     private final List<Savable> savers = new ArrayList<>();
     private final List<ListenerAdapter> listenerAdapters = new ArrayList<>();
 
+    private PlatformScheduler scheduler;
     private Gson gson;
     private Persist persist;
     private long enableTime;
@@ -53,6 +55,8 @@ public abstract class ZPlugin extends JavaPlugin {
     protected ZInventoryManager inventoryManager;
 
     protected void preEnable() {
+
+        this.scheduler = new PlatformScheduler(this);
 
         LocalPlaceholder.getInstance().setPlugin((HeadPlugin) this);
         Placeholder.getPlaceholder();
@@ -90,7 +94,12 @@ public abstract class ZPlugin extends JavaPlugin {
 
     }
 
+    public PlatformScheduler getScheduler() {
+        return this.scheduler;
+    }
+
     protected void preDisable() {
+        this.scheduler.stop();
         this.enableTime = System.currentTimeMillis();
         this.log.log("=== DISABLE START ===");
     }

@@ -12,6 +12,7 @@ import fr.maxlego08.head.zcore.utils.builder.TimerBuilder;
 import fr.maxlego08.head.zcore.utils.nms.ItemStackUtils;
 import fr.maxlego08.head.zcore.utils.nms.NmsVersion;
 import fr.maxlego08.head.zcore.utils.players.ActionBar;
+import fr.maxlego08.head.zcore.utils.scheduler.PlatformScheduler;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -992,7 +993,7 @@ public abstract class ZUtils extends MessageUtils {
      * @param runnable
      */
     protected void runAsync(Plugin plugin, Runnable runnable) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
+        new PlatformScheduler(plugin).runAsync(runnable);
     }
 
     /**
