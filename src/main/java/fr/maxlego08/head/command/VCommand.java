@@ -420,7 +420,8 @@ public abstract class VCommand extends Arguments {
 	 * @param args
 	 * @return
 	 */
-	public CommandType prePerform(HeadPlugin plugin, CommandSender commandSender, String[] args) {
+	// Command instances share invocation fields; region threads must not overwrite them concurrently.
+	public synchronized CommandType prePerform(HeadPlugin plugin, CommandSender commandSender, String[] args) {
 
 		// We update the number of arguments according to the number of parents
 
@@ -449,9 +450,7 @@ public abstract class VCommand extends Arguments {
 		}
 
 		this.sender = commandSender;
-		if (this.sender instanceof Player) {
-			this.player = (Player) commandSender;
-		}
+		this.player = commandSender instanceof Player ? (Player) commandSender : null;
 
 		try {
 			return perform(plugin);
@@ -497,7 +496,7 @@ public abstract class VCommand extends Arguments {
 	 * @param args
 	 * @return
 	 */
-	public List<String> toTab(HeadPlugin plugin, CommandSender sender, String[] args) {
+	public synchronized List<String> toTab(HeadPlugin plugin, CommandSender sender, String[] args) {
 
 		this.parentCount = this.parentCount(0);
 

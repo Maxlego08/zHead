@@ -36,19 +36,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ZHeadManager extends ZUtils implements HeadManager {
 
     private final HeadPlugin plugin;
-    private final Map<HeadCategory, List<Head>> heads = new HashMap<>();
+    private volatile Map<HeadCategory, List<Head>> heads = Map.of();
     private final HeadSignature headSignature;
-    private Date updatedAt = new Date();
+    private final Object saveLock = new Object();
+    private volatile Date updatedAt = new Date();
 
     public ZHeadManager(HeadPlugin plugin) {
         this.plugin = plugin;
@@ -78,7 +81,7 @@ public class ZHeadManager extends ZUtils implements HeadManager {
     }
 
     @Override
-    public void downloadHead(boolean force) {
+    public synchronized void downloadHead(boolean force) {
 
         File file = new File(plugin.getDataFolder(), "heads.json");
         if (file.exists() && !force) {
@@ -119,13 +122,14 @@ public class ZHeadManager extends ZUtils implements HeadManager {
             fileWriter.close();
         } catch (Exception exception) {
             exception.printStackTrace();
+            return;
         }
 
         this.updatedAt = new Date();
         long duration = System.currentTimeMillis() - ms;
         this.plugin.getLogger().info("Download done in " + duration + "ms");
 
-        this.loadHeads();
+        this.readHeads();
         this.saveDate();
     }
 
@@ -161,22 +165,28 @@ public class ZHeadManager extends ZUtils implements HeadManager {
         }
     }
 
-    public void loadHeads() {
-
+    public synchronized void loadHeads() {
         File file = new File(plugin.getDataFolder(), "heads.json");
         if (!file.exists()) {
             downloadHead(true);
             return;
         }
+        readHeads();
+    }
 
-        this.heads.clear();
-
-        try {
-            FileReader fileReader = new FileReader(file);
+    private void readHeads() {
+        File file = new File(plugin.getDataFolder(), "heads.json");
+        try (FileReader fileReader = new FileReader(file)) {
             List<Head> headList = plugin.getGson().fromJson(fileReader, new TypeToken<List<Head>>() {
             }.getType());
-
-            headList.forEach(head -> this.heads.computeIfAbsent(head.getHeadCategory(), k -> new ArrayList<>()).add(head));
+            Map<HeadCategory, List<Head>> next = new EnumMap<>(HeadCategory.class);
+            for (HeadCategory category : HeadCategory.values()) {
+                next.put(category, new ArrayList<>());
+            }
+            headList.forEach(head -> next.get(head.getHeadCategory()).add(head));
+            next.replaceAll((category, values) -> List.copyOf(values));
+            // Readers in other regions see either the old or the complete new catalog.
+            this.heads = Collections.unmodifiableMap(next);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -189,7 +199,7 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
     @Override
     public long count(HeadCategory headCategory) {
-        return this.heads.get(headCategory).size();
+        return getHeads(headCategory).size();
     }
 
     @Override
@@ -199,17 +209,25 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
     @Override
     public List<Head> getHeads(HeadCategory headCategory) {
-        return this.heads.get(headCategory);
+        return this.heads.getOrDefault(headCategory, List.of());
     }
 
     @Override
     public void give(CommandSender sender, Player player, Head head, int amount) {
-        ItemStack itemStack = createItemStack(head);
-        itemStack.setAmount(amount);
-        Config.paginateItem.applyName(itemStack, "%name%", head.getName());
-        give(player, itemStack);
-
-        message(sender, Message.GIVE, "%name%", head.getName(), "%id%", head.getId());
+        Objects.requireNonNull(player, "Head recipient must be online");
+        this.plugin.getScheduler().runPlayer(player, () -> {
+            ItemStack itemStack = createItemStack(head);
+            itemStack.setAmount(amount);
+            Config.paginateItem.applyName(itemStack, "%name%", head.getName());
+            give(player, itemStack);
+            if (sender instanceof Player senderPlayer) {
+                this.plugin.getScheduler().runPlayer(senderPlayer,
+                        () -> message(sender, Message.GIVE, "%name%", head.getName(), "%id%", head.getId()));
+            } else {
+                this.plugin.getScheduler().runGlobal(
+                        () -> message(sender, Message.GIVE, "%name%", head.getName(), "%id%", head.getId()));
+            }
+        });
     }
 
     @Override
@@ -240,7 +258,7 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
     @Override
     public Date getUpdatedAt() {
-        return this.updatedAt;
+        return new Date(this.updatedAt.getTime());
     }
 
     @Override
@@ -285,6 +303,12 @@ public class ZHeadManager extends ZUtils implements HeadManager {
 
     @Override
     public void saveHead(CommandSender sender, Head head) {
+        synchronized (this.saveLock) {
+            writeSavedHead(sender, head);
+        }
+    }
+
+    private void writeSavedHead(CommandSender sender, Head head) {
 
         File file = new File(this.plugin.getDataFolder(), "save_items.yml");
         if (!file.exists()) {

@@ -1,6 +1,6 @@
 package fr.maxlego08.head.inventory;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
@@ -11,7 +11,6 @@ import fr.maxlego08.head.exceptions.InventoryOpenException;
 import fr.maxlego08.head.zcore.enums.EnumInventory;
 import fr.maxlego08.head.zcore.enums.Message;
 import fr.maxlego08.head.zcore.utils.inventory.ItemButton;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -27,8 +26,8 @@ import fr.maxlego08.head.zcore.utils.inventory.InventoryResult;
 
 public class ZInventoryManager extends ListenerAdapter {
 
-	private final Map<Integer, VInventory> inventories = new HashMap<>();
-	private final Map<UUID, VInventory> playerInventories = new HashMap<>();
+	private final Map<Integer, VInventory> inventories = new ConcurrentHashMap<>();
+	private final Map<UUID, VInventory> playerInventories = new ConcurrentHashMap<>();
 	private final HeadPlugin plugin;
 
 	/**
@@ -87,6 +86,10 @@ public class ZInventoryManager extends ListenerAdapter {
 	 *            - The arguments used to make the inventory work
 	 */
 	public void createInventory(int id, Player player, int page, Object... objects) {
+		this.plugin.getScheduler().runPlayer(player, () -> openInventory(id, player, page, objects));
+	}
+
+	private void openInventory(int id, Player player, int page, Object... objects) {
 		Optional<VInventory> optional = this.getInventory(id);
 
 		if (!optional.isPresent()) {
@@ -223,7 +226,11 @@ public class ZInventoryManager extends ListenerAdapter {
 				.collect(Collectors.toList()).iterator();
 		while (iterator.hasNext()) {
 			VInventory inventory = iterator.next();
-			Bukkit.getScheduler().runTask(this.plugin, () -> createInventory(inventory, inventory.getPlayer()));
+			this.plugin.getScheduler().runPlayer(inventory.getPlayer(), () -> {
+				if (playerInventories.get(inventory.getPlayer().getUniqueId()) == inventory) {
+					openInventory(inventory.getId(), inventory.getPlayer(), inventory.getPage(), inventory.getObjets());
+				}
+			});
 		}
 	}
 
@@ -235,7 +242,11 @@ public class ZInventoryManager extends ListenerAdapter {
 				.collect(Collectors.toList()).iterator();
 		while (iterator.hasNext()) {
 			VInventory inventory = iterator.next();
-			inventory.getPlayer().closeInventory();
+			this.plugin.getScheduler().runPlayer(inventory.getPlayer(), () -> {
+				if (playerInventories.get(inventory.getPlayer().getUniqueId()) == inventory) {
+					inventory.getPlayer().closeInventory();
+				}
+			});
 		}
 	}
 

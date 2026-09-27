@@ -116,7 +116,7 @@ public abstract class VInventory extends ZUtils implements Cloneable {
 		this.items.put(slot, button);
 
 		if (this.openAsync) {
-			runAsync(this.plugin, () -> this.inventory.setItem(slot, item));
+			this.plugin.getScheduler().runPlayer(this.player, () -> this.inventory.setItem(slot, item));
 		} else {
 			this.inventory.setItem(slot, item);
 		}

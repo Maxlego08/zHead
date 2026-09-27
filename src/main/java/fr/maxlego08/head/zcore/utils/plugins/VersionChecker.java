@@ -14,7 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
+import fr.maxlego08.head.zcore.utils.scheduler.PlatformScheduler;
 
 import fr.maxlego08.head.zcore.logger.Logger;
 
@@ -29,7 +29,7 @@ public class VersionChecker implements Listener {
 	private final String URL_RESOURCE = "https://groupez.dev/resources/%s";
 	private final Plugin plugin;
 	private final int pluginID;
-	private boolean useLastVersion = false;
+	private volatile boolean useLastVersion = false;
 
 	/**
 	 * Class constructor
@@ -73,15 +73,12 @@ public class VersionChecker implements Listener {
 	public void onConnect(PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
 		if (!useLastVersion && event.getPlayer().hasPermission("zplugin.notifs")) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					String prefix = Message.PREFIX.getMessage();
-					player.sendMessage(prefix
-							+ "§cYou do not use the latest version of the plugin! Thank you for taking the latest version to avoid any risk of problem!");
-					player.sendMessage(prefix + "§fDownload plugin here: §a" + String.format(URL_RESOURCE, pluginID));
-				}
-			}.runTaskLater(plugin, 20 * 2);
+			new PlatformScheduler(plugin).runPlayerLater(player, () -> {
+				String prefix = Message.PREFIX.getMessage();
+				player.sendMessage(prefix
+						+ "§cYou do not use the latest version of the plugin! Thank you for taking the latest version to avoid any risk of problem!");
+				player.sendMessage(prefix + "§fDownload plugin here: §a" + String.format(URL_RESOURCE, pluginID));
+			}, 20 * 2);
 		}
 	}
 
@@ -92,7 +89,7 @@ public class VersionChecker implements Listener {
 	 *            - Do something after
 	 */
 	public void getVersion(Consumer<String> consumer) {
-		Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+		new PlatformScheduler(this.plugin).runAsync(() -> {
 			final String apiURL = String.format(URL_API, this.pluginID);
 			try {
 				URL url = new URL(apiURL);

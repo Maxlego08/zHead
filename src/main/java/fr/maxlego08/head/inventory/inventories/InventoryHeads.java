@@ -9,7 +9,6 @@ import fr.maxlego08.head.save.Config;
 import fr.maxlego08.head.zcore.enums.Message;
 import fr.maxlego08.head.zcore.enums.Permission;
 import fr.maxlego08.head.zcore.utils.inventory.InventoryResult;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -76,7 +75,7 @@ public class InventoryHeads extends VInventory {
 
         addItem(37, itemStack).setClick(event -> {
             player.closeInventory();
-            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> this.plugin.getHeadManager().downloadHead(true));
+            this.plugin.getScheduler().runAsync(() -> this.plugin.getHeadManager().downloadHead(true));
             message(player, Message.REFRESH);
         });
     }
